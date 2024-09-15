@@ -7,10 +7,13 @@ import Services from "./Pages/Services";
 import Signup from "./Components/Registration/SignUp";
 import RoleSelection from "./Components/Registration/RoleSelection";
 import SignIn from "./Components/Registration/SignIn/SignIn";
+import Navbar from "./Components/Navbar";
 
 function App() {
   return (
+    
     <Router>
+      <Navbar/>
       <Routes>
         <Route path="signup/role-selection" element={<RoleSelection />} />
         <Route path="signup" element={<Signup />} />

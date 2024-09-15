@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Sidebar = ({initialChats , activeChat, setActiveChat }) => (
-    <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
-        <div className="flex flex-row items-center justify-center h-12 w-full">
-            <div className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
+// Sidebar Component
+const Sidebar = ({ initialChats, activeChat, setActiveChat }) => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
+    return (
+        <div>
+            {/* Toggle Button */}
+            <div
+                onClick={toggleSidebar}
+                className="fixed top-4 left-4 z-50 flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10 cursor-pointer"
+            >
                 <svg
                     className="w-6 h-6"
                     fill="none"
@@ -19,26 +30,46 @@ const Sidebar = ({initialChats , activeChat, setActiveChat }) => (
                     ></path>
                 </svg>
             </div>
-            <div className="ml-2 font-bold text-2xl">QuickChat</div>
-        </div>
-        <div className="flex flex-col mt-8">
-            <div className="flex flex-row items-center justify-between text-xs">
-                <span className="font-bold">Active Conversations</span>
-            </div>
-            <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48">
-                {Object.keys(initialChats).map((chat) => (
-                    <ConversationButton
-                        key={chat}
-                        name={chat}
-                        activeChat={activeChat}
-                        setActiveChat={setActiveChat}
-                    />
-                ))}
-            </div>
-        </div>
-    </div>
-);
 
+            {/* Sidebar Content */}
+            <div
+                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transition-transform transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} z-40`}
+                style={{ transition: 'transform 0.3s ease' }}
+            >
+                <div className="flex flex-col py-8 pl-6 pr-2 h-full">
+                    <div className="flex flex-row items-center justify-center h-12 w-full">
+                        <div className="ml-2 font-bold text-2xl">QuickChat</div>
+                    </div>
+                    <div className="flex flex-col mt-8">
+                        <div className="flex flex-row items-center justify-between text-xs">
+                            <span className="font-bold">Active Conversations</span>
+                        </div>
+                        <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-auto">
+                            {Object.keys(initialChats).map((chat) => (
+                                <ConversationButton
+                                    key={chat}
+                                    name={chat}
+                                    activeChat={activeChat}
+                                    setActiveChat={setActiveChat}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {/* Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black opacity-50 z-30"
+                    onClick={toggleSidebar}
+                ></div>
+            )}
+        </div>
+    );
+};
+
+// ConversationButton Component
 const ConversationButton = ({ name, activeChat, setActiveChat }) => (
     <button
         onClick={() => setActiveChat(name)}
