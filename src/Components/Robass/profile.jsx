@@ -8,7 +8,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+    <div className="bg-gray-100 min-h-screen p-2">
       {/* Main Content Block */}
       <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         {/* Profile Header */}
@@ -29,9 +29,10 @@ const ProfilePage = () => {
               Experienced developer with 5+ years of experience building dynamic
               websites.
             </p>
-            <button className="w-full px-6 py-3 bg-[#5433FF] text-white rounded-lg font-semibold shadow-lg hover:bg-[#4379FF] transition duration-300">
-              Contact Me
-            </button>
+            <button className="w-full px-6 py-3 bg-[#5433FF] text-white rounded-lg font-semibold shadow-lg hover:bg-[#4379FF] transition duration-300 w-48">
+  Contact Me
+</button>
+
           </div>
         </div>
 
@@ -72,6 +73,21 @@ const ProfilePage = () => {
             <span className="bg-[#5433FF] text-white px-4 py-2 rounded-full font-semibold mr-2 mt-2">
               CSS3
             </span>
+          </div>
+        </div>
+
+        {/* Languages Section */}
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold text-gray-800">Languages</h2>
+          <div className="flex flex-wrap mt-4 gap-4">
+            <div className="bg-[#5433FF] text-white px-4 py-2 rounded-xl font-semibold max-w-xs">
+              <h3 className="text-xl">English</h3>
+              <p className="text-gray-200">Fluent</p>
+            </div>
+            <div className="bg-[#5433FF] text-white px-4 py-2 rounded-xl font-semibold max-w-xs">
+              <h3 className="text-xl">Spanish</h3>
+              <p className="text-gray-200">Conversational</p>
+            </div>
           </div>
         </div>
 
@@ -144,23 +160,6 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-
-        {/* Languages Section */}
-        <div className="mt-6">
-  <h2 className="text-2xl font-bold text-gray-800">Languages</h2>
-  <div className="flex flex-wrap mt-4 gap-4"> {/* Added gap for consistent spacing */}
-    <div className="bg-[#5433FF] text-white px-4 py-2 rounded-xl font-semibold max-w-xs"> {/* Removed mx-20 */}
-      <h3 className="text-xl">English</h3>
-      <p className="text-gray-200">Fluent</p>
-    </div>
-    <div className="bg-[#5433FF] text-white px-4 py-2 rounded-xl font-semibold max-w-xs"> {/* Removed mx-20 */}
-      <h3 className="text-xl">Spanish</h3>
-      <p className="text-gray-200">Conversational</p>
-    </div>
-  </div>
-</div>
-
-
       </div>
     </div>
   );
