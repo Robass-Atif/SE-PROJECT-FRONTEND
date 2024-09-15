@@ -1,15 +1,17 @@
-
-import './App.css'
+import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Profile from './Components/Robass/profile';
+import Rule from './Components/Robass/rule';
 
 function App() {
-  
-
   return (
-    <>
-      <h1 className="text-3xl text-blue-500 font-bold underline text-center">Hello world!</h1>
-        
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/rule" element={<Rule />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
