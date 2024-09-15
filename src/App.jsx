@@ -1,13 +1,12 @@
-
 import './App.css'
-
+import MessageSection from './assets/Pages/MessageSection'
+import Services from './assets/Pages/Services'
 function App() {
   
 
   return (
     <>
-      <h1 className="text-3xl text-blue-500 font-bold underline text-center">Hello world!</h1>
-        
+      <Services/>
     </>
   )
 }
