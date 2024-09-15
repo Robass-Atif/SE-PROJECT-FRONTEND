@@ -44,70 +44,68 @@ const TrustSafety = () => {
         <div className="mt-4">
           <button
             onClick={toggleDropdown}
-            className="w-full flex justify-between items-center bg-green-600 text-white px-6 py-4 rounded-lg focus:outline-none"
+            className="w-full flex justify-between items-center bg-[#5433FF] text-white px-8 py-5 rounded-lg focus:outline-none"
           >
-            <span className="font-bold text-lg">
+            <span className="font-bold text-xl">
               Read about our Marketplace Standards
             </span>
-            <span className="text-xl">{isOpen ? "-" : "+"}</span>
+            <span className="text-2xl">{isOpen ? "-" : "+"}</span>
           </button>
 
           {isOpen && (
-            <div className="bg-gray-100 p-4 mt-4 rounded-lg">
-              <p className="text-gray-600">
-                Our marketplace standards are designed to protect the Upwork
-                community from any unfair or harmful activity, and to ensure a
-                safe and professional environment.
-              </p>
-            </div>
+          <div className="bg-gray-100 p-4 mt-4 rounded-lg">
+          <p className="text-gray-600">
+            Our marketplace standards are designed to protect the Upwork
+            community from any unfair or harmful activity, and to ensure a
+            safe and professional environment.
+          </p>
+        </div>
           )}
         </div>
+
         {/* build like that some more */}
 
-        {/* Dropdown Section */}
-        <div className="mt-10">
+        <div className="mt-4">
           <button
             onClick={toggleDropdown}
-            className="w-full flex justify-between items-center bg-green-600 text-white px-4 py-3 rounded-lg focus:outline-none"
+            className="w-full flex justify-between items-center bg-[#5433FF] text-white px-8 py-5 rounded-lg focus:outline-none"
           >
-            <span className="font-bold">
+            <span className="font-bold text-xl">
               Read about our Marketplace Standards
             </span>
-            <span className="text-xl">{isOpen ? "-" : "+"}</span>
+            <span className="text-2xl">{isOpen ? "-" : "+"}</span>
           </button>
 
           {isOpen && (
-            <div className="bg-gray-100 p-4 mt-4 rounded-lg">
-              <p className="text-gray-600">
-                Our marketplace standards are designed to protect the Upwork
-                community from any unfair or harmful activity, and to ensure a
-                safe and professional environment.
-              </p>
-            </div>
+          <div className="bg-gray-100 p-4 mt-4 rounded-lg">
+          <p className="text-gray-600">
+            Our marketplace standards are designed to protect the Upwork
+            community from any unfair or harmful activity, and to ensure a
+            safe and professional environment.
+          </p>
+        </div>
           )}
         </div>
-        {/* build like that some more */}
 
-        {/* Dropdown Section */}
-        <div className="mt-10">
+        <div className="mt-4">
           <button
             onClick={toggleDropdown}
-            className="w-full flex justify-between items-center bg-green-600 text-white px-4 py-3 rounded-lg focus:outline-none"
+            className="w-full flex justify-between items-center bg-[#5433FF] text-white px-8 py-5 rounded-lg focus:outline-none"
           >
-            <span className="font-bold">
+            <span className="font-bold text-xl">
               Read about our Marketplace Standards
             </span>
-            <span className="text-xl">{isOpen ? "-" : "+"}</span>
+            <span className="text-2xl">{isOpen ? "-" : "+"}</span>
           </button>
 
           {isOpen && (
-            <div className="bg-gray-100 p-4 mt-4 rounded-lg">
-              <p className="text-gray-600">
-                Our marketplace standards are designed to protect the Upwork
-                community from any unfair or harmful activity, and to ensure a
-                safe and professional environment.
-              </p>
-            </div>
+           <div className="bg-gray-100 p-4 mt-4 rounded-lg">
+           <p className="text-gray-600">
+             Our marketplace standards are designed to protect the Upwork
+             community from any unfair or harmful activity, and to ensure a
+             safe and professional environment.
+           </p>
+         </div>
           )}
         </div>
       </div>
