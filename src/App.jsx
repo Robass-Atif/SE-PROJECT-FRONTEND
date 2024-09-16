@@ -11,6 +11,7 @@ import Navbar from "./Components/Navbar";
 import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
 import FreelancerProfile from "./Components/Review/FreelancerProfile";
 import EditProfile from "./Components/Robass/editprofile";
+import LandingPage from "./Pages/LandingPage";
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
     <Router>
       <Navbar/>
       <Routes>
+      <Route path="/" element={<LandingPage />} />
+
         <Route path="/" element={<RoleSelection />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<SignIn />} />
