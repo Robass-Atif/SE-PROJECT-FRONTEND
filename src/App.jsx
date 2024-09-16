@@ -8,6 +8,9 @@ import Signup from "./Components/Registration/SignUp";
 import RoleSelection from "./Components/Registration/RoleSelection";
 import SignIn from "./Components/Registration/SignIn/SignIn";
 import Navbar from "./Components/Navbar";
+import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
+import FreelancerProfile from "./Components/Review/FreelancerProfile";
+
 
 function App() {
   return (
@@ -15,13 +18,17 @@ function App() {
     <Router>
       <Navbar/>
       <Routes>
-        <Route path="signup/role-selection" element={<RoleSelection />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="signin" element={<SignIn />} />
+        <Route path="/" element={<RoleSelection />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/rule" element={<Rule />} />
         <Route path="/message" element={<MessageSection />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/dashboard" element={<ServiceProviderDashboard />} />
+        <Route path="/review" element={<FreelancerProfile />} />
+
+
       </Routes>
     </Router>
   );
