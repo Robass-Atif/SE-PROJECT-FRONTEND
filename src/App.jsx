@@ -10,6 +10,7 @@ import SignIn from "./Components/Registration/SignIn/SignIn";
 import Navbar from "./Components/Navbar";
 import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
 import FreelancerProfile from "./Components/Review/FreelancerProfile";
+import EditProfile from "./Components/Robass/editprofile";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/editprofile" element={<EditProfile/>} />
         <Route path="/rule" element={<Rule />} />
         <Route path="/message" element={<MessageSection />} />
         <Route path="/services" element={<Services />} />
