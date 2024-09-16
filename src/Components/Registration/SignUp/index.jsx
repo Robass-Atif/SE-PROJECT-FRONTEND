@@ -35,13 +35,13 @@ const Signup = () => {
           </h2>
 
           {/* Apple Sign-up Button */}
-          <button className="flex justify-center items-center bg-gray-900 mb-4 px-4 py-2 rounded-lg w-full text-white">
-            <img src={apple} alt="Apple" className="mr-2 h-6" />
+          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm transition duration-300">
+            <img src={apple} alt="apple" className="mr-2 w-5 h-5" />
             Continue with Apple
           </button>
 
           {/* Google Sign-up Button */}
-          <button className="flex justify-center items-center border-gray-300 bg-white mb-4 px-4 py-2 border rounded-lg w-full text-gray-800">
+          <button className="flex justify-center items-center border-gray-300 bg-white mb-4 px-4 py-2 border rounded-full w-full text-gray-800">
             <img src={google} alt="Google" className="mr-2 h-6" />
             Continue with Google
           </button>
@@ -129,7 +129,7 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg w-full text-white transition-colors"
+            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-white transition-colors"
           >
             Create My Account
           </button>
