@@ -10,15 +10,11 @@ import MessageSection from "./Pages/MessageSection";
 import Services from "./Pages/Services";
 import AddService from "./Components/Service Provider Dashboard/AddService";
 import UpdateService from "./Components/Service Provider Dashboard/updateService";
-<<<<<<< Updated upstream
 import ServiceDetails from "./Components/Services/ServicesDetail";
-import ProfilePage from "./Pages/PortfolioPage";
-=======
 import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
 import FreelancerProfile from "./Components/Review/FreelancerProfile";
 import ProfileRoutes from "./Components/Routes/ProfileRoutes";
 import SettingsRoutes from "./Components/Routes/SettingsRoutes";
->>>>>>> Stashed changes
 
 function App() {
   return (
