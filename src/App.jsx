@@ -32,7 +32,8 @@ function App() {
         <Route path="/rule" element={<TrustSafety />} />
         <Route path="/message" element={<MessageSection />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/addservices" element={<AddService/>} />
+        <Route path="/addservice" element={<AddService/>} />
+        
         <Route path="/dashboard" element={<ServiceProviderDashboard />} />
         <Route path="/review" element={<FreelancerProfile />} />
       </Routes>
