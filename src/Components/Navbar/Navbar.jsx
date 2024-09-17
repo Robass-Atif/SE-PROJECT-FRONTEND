@@ -106,7 +106,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="top-14 right-0 left-0 absolute flex flex-col space-y-4 md:hidden bg-white shadow-md p-4 text-gray-700">
+        <div className="top-14 right-0 left-0 z-30 absolute flex flex-col space-y-4 md:hidden bg-white shadow-md p-4 text-gray-700">
           <Link to="/" className="hover:text-indigo-600">
             Home
           </Link>
