@@ -9,6 +9,10 @@ export default {
       colors: {
         // Define your custom colors here
         'custom-violet': '#5433FF',
+        'custom-blue': '#4379FF',
+        'custom-cyan': '#1CC6FF',
+        'custom-badami': '#97FBD1',
+        'custom-pink': '#F6A4EC'
       },
     },
   },
