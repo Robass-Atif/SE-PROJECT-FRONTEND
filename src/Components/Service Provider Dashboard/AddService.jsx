@@ -15,6 +15,10 @@ const AddServiceMultiStepForm = () => {
     revisionCount: 1,
     serviceKeywords: "",
     serviceTags: "",
+    serviceLocation: "",
+    availabilityStart: "",
+    availabilityEnd: "",
+    detailedPricing: "",
   });
 
   // Handle change in form inputs
@@ -35,7 +39,7 @@ const AddServiceMultiStepForm = () => {
 
   // Navigation functions for next and previous steps
   const nextStep = () => {
-    if (step < 5) {
+    if (step < 6) {
       setStep(step + 1);
     }
   };
@@ -50,7 +54,7 @@ const AddServiceMultiStepForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
-    alert("Service added successfully!");
+    // Submit logic without alert
   };
 
   return (
@@ -132,6 +136,21 @@ const AddServiceMultiStepForm = () => {
                   placeholder="Enter delivery time in days"
                 />
               </div>
+
+              <div>
+                <label htmlFor="detailedPricing" className="block text-gray-700 font-medium mb-2">
+                  Detailed Pricing (Optional)
+                </label>
+                <textarea
+                  id="detailedPricing"
+                  name="detailedPricing"
+                  value={formData.detailedPricing}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
+                  rows="3"
+                  placeholder="Enter detailed pricing options if any"
+                />
+              </div>
             </div>
           )}
 
@@ -205,8 +224,56 @@ const AddServiceMultiStepForm = () => {
             </div>
           )}
 
-          {/* Step 5: Cover Image Upload */}
+          {/* Step 5: Location and Availability */}
           {step === 5 && (
+            <div className="space-y-6">
+              <div>
+                <label htmlFor="serviceLocation" className="block text-gray-700 font-medium mb-2">
+                  Service Location
+                </label>
+                <input
+                  type="text"
+                  id="serviceLocation"
+                  name="serviceLocation"
+                  value={formData.serviceLocation}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
+                  placeholder="Enter service location"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="availabilityStart" className="block text-gray-700 font-medium mb-2">
+                  Availability Start Time
+                </label>
+                <input
+                  type="time"
+                  id="availabilityStart"
+                  name="availabilityStart"
+                  value={formData.availabilityStart}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="availabilityEnd" className="block text-gray-700 font-medium mb-2">
+                  Availability End Time
+                </label>
+                <input
+                  type="time"
+                  id="availabilityEnd"
+                  name="availabilityEnd"
+                  value={formData.availabilityEnd}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Step 6: Cover Image Upload */}
+          {step === 6 && (
             <div className="space-y-6">
               <div>
                 <label htmlFor="coverImage" className="block text-gray-700 font-medium mb-2">
@@ -220,37 +287,34 @@ const AddServiceMultiStepForm = () => {
                   onChange={handleFileChange}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
                 />
-                {formData.coverImage && (
-                  <p className="text-green-500 mt-2">Image selected: {formData.coverImage.name}</p>
-                )}
               </div>
             </div>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="flex flex-col md:flex-row justify-between mt-8">
+          {/* Navigation buttons */}
+          <div className="flex justify-between mt-8">
             {step > 1 && (
               <button
                 type="button"
                 onClick={prevStep}
-                className="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-400 transition duration-200 mb-2 md:mb-0"
+                className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md"
               >
                 Previous
               </button>
             )}
-            {step < 5 && (
+
+            {step < 6 ? (
               <button
                 type="button"
                 onClick={nextStep}
-                className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 mb-2 md:mb-0"
+                className="px-6 py-2 bg-indigo-600 text-white rounded-md"
               >
                 Next
               </button>
-            )}
-            {step === 5 && (
+            ) : (
               <button
                 type="submit"
-                className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-200"
+                className="px-6 py-2 bg-indigo-600 text-white rounded-md"
               >
                 Submit
               </button>
