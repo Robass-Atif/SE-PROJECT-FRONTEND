@@ -55,8 +55,10 @@ const AddServiceMultiStepForm = () => {
 
   return (
     <div className="bg-gray-100 py-12">
-      <div className="max-w-3xl mx-auto bg-white p-8 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add New Service</h2>
+      <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 shadow-lg rounded-lg">
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">
+          Add New Service
+        </h2>
 
         <form onSubmit={handleSubmit}>
           {/* Step 1: Service Details */}
@@ -128,21 +130,6 @@ const AddServiceMultiStepForm = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
                   placeholder="Enter delivery time in days"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="revisionCount" className="block text-gray-700 font-medium mb-2">
-                  Number of Revisions
-                </label>
-                <input
-                  type="number"
-                  id="revisionCount"
-                  name="revisionCount"
-                  value={formData.revisionCount}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
-                  placeholder="Enter number of revisions"
                 />
               </div>
             </div>
@@ -241,12 +228,12 @@ const AddServiceMultiStepForm = () => {
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8">
+          <div className="flex flex-col md:flex-row justify-between mt-8">
             {step > 1 && (
               <button
                 type="button"
                 onClick={prevStep}
-                className="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-400 transition duration-200"
+                className="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-md hover:bg-gray-400 transition duration-200 mb-2 md:mb-0"
               >
                 Previous
               </button>
@@ -255,7 +242,7 @@ const AddServiceMultiStepForm = () => {
               <button
                 type="button"
                 onClick={nextStep}
-                className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
+                className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 mb-2 md:mb-0"
               >
                 Next
               </button>
@@ -263,7 +250,7 @@ const AddServiceMultiStepForm = () => {
             {step === 5 && (
               <button
                 type="submit"
-                className="bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-200"
+                className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-200"
               >
                 Submit
               </button>
