@@ -17,87 +17,78 @@ const RoleSelection = () => {
   };
 
   return (
-    <div className="relative flex flex-col justify-center items-center bg-gradient-to-r from-white via-white to-gray-300 min-h-screen overflow-hidden">
-      {/* Particle Background */}
-      <div className="z-0 absolute inset-0 overflow-hidden">
-        <div className="particle-container">
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-        </div>
-      </div>
-
-      {/* 3D Glass Panel Container */}
-      <div className="relative z-10 flex flex-col items-center border-white bg-white bg-opacity-10 shadow-2xl backdrop-blur-lg p-8 border border-opacity-30 rounded-2xl w-full max-w-xl">
-        <h1 className="mb-8 font-bold text-4xl text-black">
+    <div className="flex flex-col justify-center items-center bg-gray-50 py-8 min-h-screen">
+      {/* Role selection options with 3D hover effects */}
+      <div className="flex flex-col space-y-8 px-4 w-full max-w-xl">
+        <h1 className="mb-8 font-bold text-3xl text-center text-gray-900">
           Join as a Client or Freelancer
         </h1>
 
-        {/* Role selection options with 3D hover effects */}
-        <div className="flex space-x-8 mb-10">
+        <div className="flex sm:flex-row flex-col sm:space-x-6 space-y-6 sm:space-y-0">
+          {/* Client Selection Card */}
           <motion.div
             whileHover={{ scale: 1.05, rotate: 2 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleRoleSelect("client")}
-            className={`cursor-pointer p-8 w-72 h-48 bg-black bg-opacity-20 backdrop-blur-lg border-2 rounded-3xl transition-all transform hover:shadow-[0px_0px_15px_4px_rgba(236,72,153,0.6)] ${
+            className={`cursor-pointer p-6 w-full sm:w-60 h-40 bg-gray-100 border-2 rounded-lg transition-all transform hover:shadow-lg ${
               selectedRole === "client"
-                ? "border-pink-500"
+                ? "border-indigo-600"
                 : "border-transparent"
             }`}
           >
-            <div className="flex justify-between items-center mb-6">
-              <span role="img" aria-label="client" className="text-5xl">
+            <div className="flex justify-between items-center mb-4">
+              <span role="img" aria-label="client" className="text-4xl">
                 💼
               </span>
               <input
                 type="radio"
                 checked={selectedRole === "client"}
                 onChange={() => handleRoleSelect("client")}
-                className="form-radio text-pink-500"
+                className="form-radio text-indigo-600"
               />
             </div>
-            <p className="font-medium text-black text-xl tracking-wide">
+            <p className="font-medium text-gray-900 text-lg">
               I’m a client, hiring for a project
             </p>
           </motion.div>
 
+          {/* Freelancer Selection Card */}
           <motion.div
             whileHover={{ scale: 1.05, rotate: -2 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleRoleSelect("freelancer")}
-            className={`cursor-pointer p-8 w-72 h-48 bg-black bg-opacity-20 backdrop-blur-lg border-2 rounded-3xl transition-all transform hover:shadow-[0px_0px_15px_4px_rgba(139,92,246,0.6)] ${
+            className={`cursor-pointer p-6 w-full sm:w-60 h-40 bg-gray-100 border-2 rounded-lg transition-all transform hover:shadow-lg ${
               selectedRole === "freelancer"
-                ? "border-purple-500"
+                ? "border-indigo-600"
                 : "border-transparent"
             }`}
           >
-            <div className="flex justify-between items-center mb-6">
-              <span role="img" aria-label="freelancer" className="text-5xl">
+            <div className="flex justify-between items-center mb-4">
+              <span role="img" aria-label="freelancer" className="text-4xl">
                 👨‍💻
               </span>
               <input
                 type="radio"
                 checked={selectedRole === "freelancer"}
                 onChange={() => handleRoleSelect("freelancer")}
-                className="form-radio text-purple-500"
+                className="form-radio text-indigo-600"
               />
             </div>
-            <p className="font-medium text-black text-xl tracking-wide">
+            <p className="font-medium text-gray-900 text-lg">
               I’m a freelancer, looking for work
             </p>
           </motion.div>
         </div>
 
-        {/* Create Account Button with neon effect */}
+        {/* Create Account Button */}
         <motion.button
           onClick={handleCreateAccount}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className={`w-full py-4 rounded-full font-bold text-lg transition-all transform ${
+          className={`w-full py-3 rounded-full font-bold text-lg transition-all ${
             selectedRole
-              ? "bg-gradient-to-r from-purple-500 to-pink-600 shadow-[0px_0px_20px_rgba(236,72,153,0.8)] text-black"
-              : "bg-gray-400 cursor-not-allowed"
+              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+              : "bg-gray-300 cursor-not-allowed text-gray-500"
           }`}
           disabled={!selectedRole}
         >
@@ -105,11 +96,11 @@ const RoleSelection = () => {
         </motion.button>
 
         {/* Log in Link */}
-        <p className="mt-6 text-black text-opacity-80">
+        <p className="mt-6 text-center text-gray-700">
           Already have an account?{" "}
           <span
             onClick={() => navigate("/login")}
-            className="text-pink-500 hover:underline cursor-pointer"
+            className="text-indigo-600 hover:underline cursor-pointer"
           >
             Log In
           </span>

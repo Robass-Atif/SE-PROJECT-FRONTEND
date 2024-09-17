@@ -29,19 +29,19 @@ const Signup = () => {
         ></div>
 
         {/* Form */}
-        <form className="border-gray-200 bg-white shadow-md p-8 border rounded-lg w-full max-w-lg">
-          <h2 className="mb-6 font-semibold text-2xl text-center text-gray-800">
+        <form className="border-gray-200 bg-white shadow-md mx-4 sm:mx-auto p-6 sm:p-8 border rounded-lg w-full max-w-md sm:max-w-lg">
+          <h2 className="mb-6 font-semibold text-center text-gray-800 text-xl sm:text-2xl">
             Sign up to find work you love
           </h2>
 
           {/* Apple Sign-up Button */}
-          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm transition duration-300">
+          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
             <img src={apple} alt="apple" className="mr-2 w-5 h-5" />
             Continue with Apple
           </button>
 
           {/* Google Sign-up Button */}
-          <button className="flex justify-center items-center border-gray-300 bg-white mb-4 px-4 py-2 border rounded-full w-full text-gray-800">
+          <button className="flex justify-center items-center border-gray-300 bg-white mb-4 px-4 py-2 border rounded-full w-full text-gray-800 text-sm sm:text-base">
             <img src={google} alt="Google" className="mr-2 h-6" />
             Continue with Google
           </button>
@@ -49,14 +49,17 @@ const Signup = () => {
           {/* Divider */}
           <div className="flex justify-center items-center my-4">
             <div className="flex-1 bg-gray-300 h-px"></div>
-            <span className="px-3 text-gray-500">or</span>
+            <span className="px-3 text-gray-500 text-sm sm:text-base">or</span>
             <div className="flex-1 bg-gray-300 h-px"></div>
           </div>
 
           {/* Name Inputs */}
-          <div className="flex justify-between gap-4 mb-4">
+          <div className="flex sm:flex-row flex-col gap-4 mb-4">
             <div className="flex-1">
-              <label htmlFor="firstname" className="block mb-2 text-sm">
+              <label
+                htmlFor="firstname"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 First Name
               </label>
               <input
@@ -67,7 +70,10 @@ const Signup = () => {
               />
             </div>
             <div className="flex-1">
-              <label htmlFor="lastname" className="block mb-2 text-sm">
+              <label
+                htmlFor="lastname"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 Last Name
               </label>
               <input
@@ -81,7 +87,7 @@ const Signup = () => {
 
           {/* Email Input */}
           <div className="mb-4">
-            <label htmlFor="email" className="block mb-2 text-sm">
+            <label htmlFor="email" className="block mb-2 text-sm sm:text-base">
               Email
             </label>
             <input
@@ -94,7 +100,10 @@ const Signup = () => {
 
           {/* Password Input */}
           <div className="relative mb-4">
-            <label htmlFor="password" className="block mb-2 text-sm">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm sm:text-base"
+            >
               Password
             </label>
             <input
@@ -106,7 +115,7 @@ const Signup = () => {
             <img
               src={passwordshow}
               alt="Show Password"
-              className="top-9 right-3 absolute h-6 cursor-pointer"
+              className="top-2 right-3 absolute h-6 cursor-pointer"
               onClick={handlePasswordShow}
             />
           </div>
@@ -120,7 +129,7 @@ const Signup = () => {
             />
             <label
               htmlFor="checked"
-              className="block ml-2 text-gray-900 text-sm cursor-pointer"
+              className="block ml-2 text-gray-900 text-sm sm:text-base cursor-pointer"
             >
               Yes, I agree to the freelance Terms of Service
             </label>
@@ -129,7 +138,7 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-white transition-colors"
+            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors"
           >
             Create My Account
           </button>
@@ -145,8 +154,8 @@ const Signup = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 mt-8 py-4 text-center">
-        <p className="text-gray-500 text-sm">
+      <footer className="bg-indigo-600 mt-8 py-4 text-center">
+        <p className="text-black text-sm">
           &copy; 2024 Your Company. All Rights Reserved.
         </p>
       </footer>
