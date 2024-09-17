@@ -2,6 +2,7 @@ import React from "react";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const handlePasswordShow = () => {
@@ -136,19 +137,23 @@ const Signup = () => {
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors"
-          >
-            Create My Account
-          </button>
+          <Link to='/signin'>
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors"
+            >
+              Create My Account
+            </button>
+          </Link>
 
           {/* Login Link */}
           <p className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <a href="/signin" className="text-indigo-600 hover:underline">
-              Log In
-            </a>
+            <Link to='/signin'>
+              <span className="text-indigo-600 hover:underline">
+                Log In
+              </span>
+            </Link>
           </p>
         </form>
       </div>

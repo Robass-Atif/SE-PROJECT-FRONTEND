@@ -13,6 +13,7 @@ import LandingPage from "./Pages/LandingPage";
 import TrustSafety from "./Components/Rules/index";
 import AddService from "./Components/Service Provider Dashboard/AddService";
 import UpdateService from "./Components/Service Provider Dashboard/updateService";
+import ServiceDetails from "./Components/Services/ServicesDetail";
 import ProfilePage from "./Pages/PortfolioPage";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/rule" element={<TrustSafety />} />
         <Route path="/message" element={<MessageSection />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/service-details/:id" element={<ServiceDetails />} />
         <Route path="/addservice" element={<AddService />} />
         <Route path="/updateservice" element={<UpdateService />} />
         <Route path="/dashboard" element={<ServiceProviderDashboard />} />

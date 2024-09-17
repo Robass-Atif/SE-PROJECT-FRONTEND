@@ -1,7 +1,20 @@
 import React from 'react';
 
-const ServicesCard = ({ name, description, price, thumbnail, profileImage, rating, numberOfRatings, title }) => (
-    <div className="bg-white shadow-md rounded-md overflow-hidden hover:shadow-lg transition-shadow">
+const ServicesCard = ({ 
+  name, 
+  description, 
+  price, 
+  thumbnail, 
+  profileImage, 
+  rating, 
+  numberOfRatings, 
+  title,
+  onClick // Add onClick handler
+}) => (
+    <div 
+      className="bg-white shadow-md rounded-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" 
+      onClick={onClick} // Attach onClick handler
+    >
         <img
             src={thumbnail}
             alt={name}

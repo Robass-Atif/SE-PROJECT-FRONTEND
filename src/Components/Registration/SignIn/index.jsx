@@ -1,9 +1,24 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
+import { Link } from "react-router-dom";
 
 function SignIn() {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    // Retrieve role from localStorage
+    const role = localStorage.getItem("role");
+
+    // Determine route based on role
+    const route = role === "freelancer" ? "/addservice" : "/services";
+
+    // Navigate to the appropriate route
+    navigate(route);
+  };
+
   return (
     <>
       {/* Main login form */}
@@ -24,14 +39,9 @@ function SignIn() {
               type="email"
               id="username"
               placeholder="Email or phone"
-              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-green-500 w-full text-sm sm:text-base focus:outline-none"
+              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none"
             />
           </div>
-
-          {/* Error message for email */}
-          <span className="mb-4 text-red-500 text-xs sm:text-sm">
-            Email error message goes here
-          </span>
 
           <div className="relative flex flex-col mb-4">
             <label
@@ -40,26 +50,24 @@ function SignIn() {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Type your password"
-              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-green-500 w-full text-sm sm:text-base focus:outline-none"
-            />
-            <img
-              src={passwordshow}
-              alt="Show password"
-              className="top-10 right-4 absolute w-5 h-5 cursor-pointer"
-            />
+            <div className="relative flex items-center">
+              <input
+                type="password"
+                id="password"
+                placeholder="Type your password"
+                className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none pr-10"
+              />
+              <img
+                src={passwordshow}
+                alt="Show password"
+                className="absolute right-3 w-5 h-5 cursor-pointer"
+              />
+            </div>
           </div>
 
-          {/* Error message for password */}
-          <span className="mb-4 text-red-500 text-xs sm:text-sm">
-            Password error message goes here
-          </span>
-
           <button
-            type="submit"
+            type="button"
+            onClick={handleLogin}
             className="bg-[#5433FF] hover:bg-indigo-600 py-3 rounded-full w-full font-medium text-sm text-white sm:text-base transition duration-300"
           >
             Log In
@@ -83,13 +91,14 @@ function SignIn() {
 
           <div className="mt-6 text-center text-gray-500 text-xs sm:text-sm">
             Don’t have an account?
-            <a
-              href="/signup"
-              className="ml-1 font-medium hover:underline"
-              style={{ color: "#5433FF" }}
-            >
-              Sign Up now
-            </a>
+            <Link to='/signup'>
+              <span
+                className="ml-1 font-medium hover:underline"
+                style={{ color: "#5433FF" }}
+              >
+                Sign Up now
+              </span>
+            </Link>
           </div>
         </form>
       </main>

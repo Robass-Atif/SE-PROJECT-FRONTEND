@@ -27,11 +27,13 @@ const Navbar = () => {
       {/* Left Side - Logo and Links */}
       <div className="flex items-center">
         {/* Logo */}
-        <img
-          src="https://via.placeholder.com/100x30?text=LSP"
-          alt="LSP Logo"
-          className="mr-6 h-6"
-        />
+        <Link to='/'>
+          <img
+            src="https://via.placeholder.com/100x30?text=LSP"
+            alt="LSP Logo"
+            className="mr-6 h-6"
+          />
+        </Link>
 
         {/* Links */}
         <div className="md:flex space-x-6 hidden">
