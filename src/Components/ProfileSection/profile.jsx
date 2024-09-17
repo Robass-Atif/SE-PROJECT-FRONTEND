@@ -18,10 +18,10 @@ const ProfilePage = () => {
             <h1 className="font-bold text-[#32325D] text-4xl transition-colors duration-300">
               John Carpenter
             </h1>
-            <p className="mt-2 text-[#6B6B76] text-xl">
+            <p className="mt-2 text-[#6B6B76] text-sm md:text-xl">
               Expert Carpenter & Woodworker
             </p>
-            <p className="mt-2 text-[#4B4F56]">
+            <p className="mt-2 text-[#4B4F56] text-sm md:text-lg">
               Crafting custom furniture and renovating homes with precision and
               care.
             </p>
