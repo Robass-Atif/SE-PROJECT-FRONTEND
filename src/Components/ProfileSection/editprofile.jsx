@@ -29,7 +29,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 flex justify-center items-center py-10">
+    <div className="min-h-screen bg-white flex justify-center items-center py-10">
       <div className="w-full max-w-3xl bg-white shadow-2xl rounded-3xl p-10">
         <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-10">
           Edit Your Profile

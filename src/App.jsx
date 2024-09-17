@@ -11,7 +11,11 @@ import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Da
 import FreelancerProfile from "./Components/Review/FreelancerProfile";
 import EditProfile from "./Components/ProfileSection/editprofile";
 import LandingPage from "./Pages/LandingPage";
+<<<<<<< Updated upstream
 import TrustSafety from "./Components/Rules/index";
+=======
+import AddService from "./Components/Service Provider Dashboard/AddService";
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -28,6 +32,7 @@ function App() {
         <Route path="/rule" element={<TrustSafety />} />
         <Route path="/message" element={<MessageSection />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/addservices" element={<AddService/>} />
         <Route path="/dashboard" element={<ServiceProviderDashboard />} />
         <Route path="/review" element={<FreelancerProfile />} />
       </Routes>
