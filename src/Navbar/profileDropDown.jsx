@@ -88,18 +88,7 @@ const ProfileDropdown = () => {
               <FaDollarSign className="w-5 h-5" />
               <p>Membership plan</p>
             </div>
-            <div className="flex items-center space-x-3 hover:text-black cursor-pointer">
-              <FaMoon className="w-5 h-5" />
-              <p>Theme: {theme.charAt(0).toUpperCase() + theme.slice(1)}</p>
-              <select
-                value={theme}
-                onChange={handleThemeChange}
-                className="border-gray-300 bg-gray-100 ml-auto p-1 rounded"
-              >
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
-            </div>
+
             <div className="flex items-center space-x-3 hover:text-black cursor-pointer">
               <FaCog className="w-5 h-5" />
               <p>Account settings</p>
