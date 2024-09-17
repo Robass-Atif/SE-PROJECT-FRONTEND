@@ -34,8 +34,10 @@ const PortfolioForm = ({ closeModal, addPortfolioItem }) => {
 
   return (
     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="bg-white shadow-lg mx-4 lg:mx-auto p-8 rounded-lg w-full max-w-4xl">
-        <h2 className="mb-4 font-bold text-2xl">Add New Portfolio Item</h2>
+      <div className="bg-white shadow-lg p-6 rounded-lg w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
+        <h2 className="mb-4 font-bold text-xl sm:text-2xl">
+          Add New Portfolio Item
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Project Title */}
@@ -109,7 +111,7 @@ const PortfolioForm = ({ closeModal, addPortfolioItem }) => {
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4 mt-4">
             <button
               type="button"
               onClick={closeModal}
@@ -119,7 +121,7 @@ const PortfolioForm = ({ closeModal, addPortfolioItem }) => {
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg text-white"
+              className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg text-lg text-white transition duration-300 ease-in-out"
             >
               Add Portfolio
             </button>

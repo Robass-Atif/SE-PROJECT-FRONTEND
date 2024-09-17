@@ -1,20 +1,24 @@
-import "./App.css";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+import Navbar from "./Components/Navbar/Navbar";
+import LandingPage from "./Pages/LandingPage";
+import RoleSelection from "./Components/Registration/RoleSelection";
+import Signup from "./Components/Registration/SignUp/index";
+import SignIn from "./Components/Registration/SignIn/index";
+import TrustSafety from "./Components/Rules/index";
 import MessageSection from "./Pages/MessageSection";
 import Services from "./Pages/Services";
-import Signup from "./Components/Registration/SignUp/index";
-import RoleSelection from "./Components/Registration/RoleSelection";
-import SignIn from "./Components/Registration/SignIn/index";
-import Navbar from "./Components/Navbar/Navbar";
-import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
-import FreelancerProfile from "./Components/Review/FreelancerProfile";
-import LandingPage from "./Pages/LandingPage";
-import TrustSafety from "./Components/Rules/index";
 import AddService from "./Components/Service Provider Dashboard/AddService";
 import UpdateService from "./Components/Service Provider Dashboard/updateService";
+<<<<<<< Updated upstream
 import ServiceDetails from "./Components/Services/ServicesDetail";
 import ProfilePage from "./Pages/PortfolioPage";
+=======
+import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
+import FreelancerProfile from "./Components/Review/FreelancerProfile";
+import ProfileRoutes from "./Components/Routes/ProfileRoutes";
+import SettingsRoutes from "./Components/Routes/SettingsRoutes";
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -33,7 +37,8 @@ function App() {
         <Route path="/updateservice" element={<UpdateService />} />
         <Route path="/dashboard" element={<ServiceProviderDashboard />} />
         <Route path="/review" element={<FreelancerProfile />} />
-        <Route path="/profile" element={<ProfilePage />} />{" "}
+        <Route path="/profile/*" element={<ProfileRoutes />} />
+        <Route path="/settings/*" element={<SettingsRoutes />} />
       </Routes>
     </Router>
   );
