@@ -4,86 +4,118 @@ import ServicesCard from '../Components/Services/ServicesCard';
 const services = [
     {
         id: 1,
-        title: "Electrical Repair",
-        description: "Expert electrical repair services to fix any issues in your home or office.",
-        price: "$150",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
+        name: "John Doe",
+        description: "Expert electrical repair services.",
+        price: 150,
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
+        profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+        rating: 4.5,
+        numberOfRatings: 120
     },
     {
         id: 2,
-        title: "Plumbing",
-        description: "Reliable plumbing services to handle all your pipe and fixture needs.",
-        price: "$120",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
-    },
-    {
-        id: 3,
-        title: "Gardening",
-        description: "Comprehensive gardening services including planting, weeding, and lawn care.",
-        price: "$80",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
+        name: "Jane Smith",
+        description: "Reliable plumbing services.",
+        price: 120,
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
+        profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
+        rating: 4.2,
+        numberOfRatings: 98
     },
     {
         id: 4,
-        title: "House Cleaning",
-        description: "Thorough cleaning services to keep your home sparkling and tidy.",
-        price: "$100",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
+        name: "Sarah Lee",
+        description: "Thorough cleaning services.",
+        price: 100,
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
+        profileImage: "https://randomuser.me/api/portraits/women/4.jpg",
+        rating: 4.7,
+        numberOfRatings: 85
     },
-    {
-        id: 5,
-        title: "Painting",
-        description: "Professional painting services for both interior and exterior projects.",
-        price: "$200",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
-    },
-    {
-        id: 6,
-        title: "Carpentry",
-        description: "Skilled carpentry services for custom furniture and home repairs.",
-        price: "$250",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
-    },
-    {
-        id: 7,
-        title: "Roofing",
-        description: "Reliable roofing services for installations, repairs, and maintenance.",
-        price: "$300",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
-    },
+
     {
         id: 8,
-        title: "Pest Control",
-        description: "Effective pest control services to keep your home free of unwanted guests.",
-        price: "$90",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU"
+        name: "Emily Clark",
+        description: "Effective pest control services.",
+        price: 90,
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
+        profileImage: "https://randomuser.me/api/portraits/women/8.jpg",
+        rating: 4.5,
+        numberOfRatings: 70
     },
 ];
 
 
 
+
 const Services = () => {
-  return (
-    <>
-    <section className="py-10">
-        <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-6">Services</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                {services.map(services => (
-                    <ServicesCard
-                        key={services.id}
-                        title={services.title}
-                        description={services.description}
-                        price={services.price}
-                        image={services.image}
-                    />
-                ))}
-            </div>
-        </div>
-    </section>
-      
-    </>
-  )
+    return (
+        <>
+            <section className="py-10">
+                <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+                    <h2 className="text-3xl font-bold mb-6">Services You May Like</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        {services.map(service => (
+                            <ServicesCard
+                                key={service.id}
+                                name={service.name}
+                                description={service.description}
+                                title={"I will amaze you with custom AI art using Midjourney AI"}
+                                price={service.price}
+                                thumbnail={service.thumbnail}
+                                profileImage={service.profileImage}
+                                rating={service.rating}
+                                numberOfRatings={service.numberOfRatings}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="py-10">
+                <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+                    <h2 className="text-3xl font-bold  mb-6">Most Popular services</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+                        {services.map(service => (
+                            <ServicesCard
+                                key={service.id}
+                                name={service.name}
+                                description={service.description}
+                                title={"I will amaze you with custom ai art using midjourney ai"}
+                                price={service.price}
+                                thumbnail={service.thumbnail}
+                                profileImage={service.profileImage}
+                                rating={service.rating}
+                                detailedDescription={'Lorem'}
+                                numberOfRatings={service.numberOfRatings}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="py-10">
+                <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+                    <h2 className="text-3xl font-bold  mb-6">Based on Browsing history</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+                        {services.map(service => (
+                            <ServicesCard
+                                key={service.id}
+                                name={service.name}
+                                description={service.description}
+                                title={"I will amaze you with custom ai art using midjourney ai"}
+                                price={service.price}
+                                thumbnail={service.thumbnail}
+                                profileImage={service.profileImage}
+                                rating={service.rating}
+                                numberOfRatings={service.numberOfRatings}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+        </>
+    )
 }
 
 export default Services

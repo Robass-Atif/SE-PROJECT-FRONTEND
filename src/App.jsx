@@ -7,7 +7,7 @@ import Services from "./Pages/Services";
 import Signup from "./Components/Registration/SignUp";
 import RoleSelection from "./Components/Registration/RoleSelection";
 import SignIn from "./Components/Registration/SignIn/SignIn";
-import Navbar from "./Navbar/Navbar";
+import Navbar from "./Components/Navbar/Navbar"
 import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Dashboard";
 import FreelancerProfile from "./Components/Review/FreelancerProfile";
 import EditProfile from "./Components/Robass/editprofile";

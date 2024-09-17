@@ -1,14 +1,32 @@
-import React from 'react'
+import React from 'react';
 
-const ServicesCard = ({ title, description, price, image }) => (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <img src={image} alt={title} className="w-full h-40 object-cover" />
-        <div className="p-4">
-            <h3 className="text-xl font-semibold mb-2">{title}</h3>
-            <p className="text-gray-700 mb-4">{description}</p>
-            <div className="text-lg font-bold">{price}</div>
+const ServicesCard = ({ name, description, price, thumbnail, profileImage, rating, numberOfRatings, title }) => (
+    <div className="bg-white shadow-md rounded-md overflow-hidden hover:shadow-lg transition-shadow">
+        <img
+            src={thumbnail}
+            alt={name}
+            className="w-full h-32 object-cover"
+        />
+        <div className="p-2">
+            <div className="flex items-center mb-2">
+                <img
+                    src={profileImage}
+                    alt={name}
+                    className="w-8 h-8 rounded-full mr-2"
+                />
+                <div className="text-sm font-semibold">{name}</div>
+            </div>
+            <h3 className="text-lg font-semibold mb-2 hover:underline cursor-pointer">
+                {title} {/* Title from props */}
+            </h3>
+            <div className="text-sm mb-2 flex items-center">
+                <span className="text-gray-400 text-xl mr-1">★</span> {/* Single star */}
+                <span className="mr-2">{rating}</span> {/* Rating value */}
+                <span className="text-gray-500">({numberOfRatings} ratings)</span> {/* Number of ratings */}
+            </div>
+            <div className="text-lg font-bold">From Rs {price}</div> {/* Larger price */}
         </div>
     </div>
 );
 
-export default ServicesCard
+export default ServicesCard;

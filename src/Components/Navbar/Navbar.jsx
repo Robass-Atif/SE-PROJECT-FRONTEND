@@ -69,7 +69,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            to="/messages"
+            to="/message"
             className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
           >
             Messages
@@ -80,11 +80,11 @@ const Navbar = () => {
       {/* Center - Search Bar */}
       <div className="md:block flex-grow hidden mx-6">
         <div className="relative">
-          <FaSearch className="top-2 left-3 absolute text-gray-400" />
+          <FaSearch className="top-3 left-3 absolute text-gray-400" />
           <input
             type="text"
             placeholder="Search"
-            className="bg-gray-100 py-2 pr-3 pl-10 rounded-lg focus:ring-2 focus:ring-indigo-400 w-full text-gray-700"
+            className="bg-gray-100 py-2 pr-3 pl-10 rounded-lg  focus:ring-custom-violet w-full text-gray-700"
           />
         </div>
       </div>
@@ -113,7 +113,7 @@ const Navbar = () => {
           <Link to="/services" className="hover:text-indigo-600">
             Services
           </Link>
-          <Link to="/messages" className="hover:text-indigo-600">
+          <Link to="/message" className="hover:text-indigo-600">
             Messages
           </Link>
           <Link to="/notifications" className="hover:text-indigo-600">
