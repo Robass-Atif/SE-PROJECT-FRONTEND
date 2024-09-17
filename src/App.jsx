@@ -11,11 +11,11 @@ import ServiceProviderDashboard from "./Components/Service Provider Dashboard/Da
 import FreelancerProfile from "./Components/Review/FreelancerProfile";
 import EditProfile from "./Components/ProfileSection/editprofile";
 import LandingPage from "./Pages/LandingPage";
-<<<<<<< Updated upstream
+
 import TrustSafety from "./Components/Rules/index";
-=======
+
 import AddService from "./Components/Service Provider Dashboard/AddService";
->>>>>>> Stashed changes
+
 
 function App() {
   return (
