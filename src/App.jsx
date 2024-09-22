@@ -36,7 +36,6 @@ function App() {
         <Route path="/review" element={<FreelancerProfile />} />
         <Route path="/profile/*" element={<ProfileRoutes />} />
         <Route path="/settings/*" element={<SettingsRoutes />} />
-        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/editprofile" element={<EditProfile />} />
 
       </Routes>
