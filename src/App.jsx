@@ -15,6 +15,7 @@ import AddService from "./Components/Service Provider Dashboard/AddService";
 import UpdateService from "./Components/Service Provider Dashboard/updateService";
 import ServiceDetails from "./Components/Services/ServicesDetail";
 import ProfilePage from "./Pages/PortfolioPage";
+import EditProfile from "./Components/Profile/EditProfile";
 
 function App() {
   return (
@@ -33,7 +34,9 @@ function App() {
         <Route path="/updateservice" element={<UpdateService />} />
         <Route path="/dashboard" element={<ServiceProviderDashboard />} />
         <Route path="/review" element={<FreelancerProfile />} />
-        <Route path="/profile" element={<ProfilePage />} />{" "}
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/editprofile" element={<EditProfile />} />
+
       </Routes>
     </Router>
   );
