@@ -91,7 +91,7 @@ const ProfileDropdown = () => {
 
             <div className="flex items-center space-x-3 hover:text-black cursor-pointer">
               <FaCog className="w-5 h-5" />
-              <p>Account settings</p>
+              <Link to={"/settings"}>Account settings</Link>
             </div>
           </div>
 
