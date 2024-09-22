@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
-import { Link } from "react-router-dom";
+
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 function SignIn() {
-  const navigate = useNavigate();
 
   const handleLogin = () => {
     // Retrieve role from localStorage
@@ -18,16 +20,44 @@ function SignIn() {
     // Navigate to the appropriate route
     navigate(route);
   };
+  const navigate = useNavigate(); // Initialize navigate
+  const handleGoogleSignIn = async (credentialResponse) => {
+    const { credential } = credentialResponse;
+    console.log('Google sign-in response:', credential);
+    try {
+      const response = await fetch('http://localhost:8080/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: credential }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('User signed in:', data.user);
+        navigate('/profile'); // Redirect to the profile page
+        // Handle successful sign-in (e.g., redirect or update state)
+      } else {
+        console.error('Error signing in:', data.error);
+        // Handle errors (e.g., show an error message)
+      }
+    } catch (error) {
+      console.error('Error during Google sign-in:', error);
+      // Handle network errors
+    }
+
+  };
 
   return (
-    <>
-      {/* Main login form */}
+    <GoogleOAuthProvider clientId="697063750023-7nha10stlk2j37gijq3p2kvgbmpmpu9r.apps.googleusercontent.com">
       <main className="flex justify-center items-center bg-gray-50 p-4 min-h-screen">
         <form className="bg-white shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md">
           <h3 className="mb-6 font-semibold text-black text-center text-xl sm:text-2xl">
             Log in to Your Account
           </h3>
 
+          {/* Username or Email Field */}
           <div className="relative flex flex-col mb-4">
             <label
               htmlFor="username"
@@ -43,6 +73,7 @@ function SignIn() {
             />
           </div>
 
+          {/* Password Field */}
           <div className="relative flex flex-col mb-4">
             <label
               htmlFor="password"
@@ -79,10 +110,13 @@ function SignIn() {
             <div className="bg-gray-300 w-full h-px"></div>
           </div>
 
-          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
-            <img src={google} alt="Google" className="mr-2 w-5 h-5" />
-            Continue with Google
-          </button>
+          <GoogleLogin
+            onSuccess={handleGoogleSignIn}
+            onError={(error) => {
+              console.error('Google sign-in failed:', error);
+            }}
+            
+          />
 
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
             <img src={apple} alt="Apple" className="mr-2 w-5 h-5" />
@@ -111,7 +145,7 @@ function SignIn() {
           </p>
         </div>
       </footer>
-    </>
+    </GoogleOAuthProvider>
   );
 }
 
