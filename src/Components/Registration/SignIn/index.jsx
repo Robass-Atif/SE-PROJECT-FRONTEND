@@ -1,14 +1,20 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom"; // Import Link
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
+
 
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 
 
+
+
 function SignIn() {
+  const navigate = useNavigate(); // Initialize navigate
+  const [email, setEmail] = useState(""); // State for email
+  const [password, setPassword] = useState(""); // State for password
 
   const handleLogin = () => {
     // Retrieve role from localStorage
@@ -20,33 +26,29 @@ function SignIn() {
     // Navigate to the appropriate route
     navigate(route);
   };
-  const navigate = useNavigate(); // Initialize navigate
+
   const handleGoogleSignIn = async (credentialResponse) => {
     const { credential } = credentialResponse;
-    console.log('Google sign-in response:', credential);
+    console.log("Google sign-in response:", credential);
     try {
-      const response = await fetch('http://localhost:8080/auth/google', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/auth/google", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ token: credential }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log('User signed in:', data.user);
-        navigate('/profile'); // Redirect to the profile page
-        // Handle successful sign-in (e.g., redirect or update state)
+        console.log("User signed in:", data.user);
+        navigate("/profile"); // Redirect to the profile page
       } else {
-        console.error('Error signing in:', data.error);
-        // Handle errors (e.g., show an error message)
+        console.error("Error signing in:", data.error);
       }
     } catch (error) {
-      console.error('Error during Google sign-in:', error);
-      // Handle network errors
+      console.error("Error during Google sign-in:", error);
     }
-
   };
 
   return (
@@ -68,6 +70,8 @@ function SignIn() {
             <input
               type="email"
               id="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Controlled input
               placeholder="Email or phone"
               className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none"
             />
@@ -85,6 +89,8 @@ function SignIn() {
               <input
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // Controlled input
                 placeholder="Type your password"
                 className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none pr-10"
               />
@@ -109,14 +115,14 @@ function SignIn() {
             <span className="mx-2">or</span>
             <div className="bg-gray-300 w-full h-px"></div>
           </div>
-
-          <GoogleLogin
-            onSuccess={handleGoogleSignIn}
-            onError={(error) => {
-              console.error('Google sign-in failed:', error);
-            }}
-            
-          />
+          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
+            <GoogleLogin
+              onSuccess={handleGoogleSignIn}
+              onError={(error) => {
+                console.error("Google sign-in failed:", error);
+              }}
+            />
+          </button>
 
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
             <img src={apple} alt="Apple" className="mr-2 w-5 h-5" />
@@ -125,7 +131,7 @@ function SignIn() {
 
           <div className="mt-6 text-center text-gray-500 text-xs sm:text-sm">
             Don’t have an account?
-            <Link to='/signup'>
+            <Link to="/signup">
               <span
                 className="ml-1 font-medium hover:underline"
                 style={{ color: "#5433FF" }}
