@@ -1,33 +1,47 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Import Link
+import { useNavigate, Link } from "react-router-dom"; 
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
-
-
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
-
-
-
-
 function SignIn() {
-  const navigate = useNavigate(); // Initialize navigate
-  const [email, setEmail] = useState(""); // State for email
-  const [password, setPassword] = useState(""); // State for password
+  const navigate = useNavigate(); 
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
-  const handleLogin = () => {
-    // Retrieve role from localStorage
+  const handleLogin = async (e) => {
+    e.preventDefault();
     const role = localStorage.getItem("role");
-
-    // Determine route based on role
     const route = role === "freelancer" ? "/addservice" : "/services";
 
-    // Navigate to the appropriate route
-    navigate(route);
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json(); // Store the response in a variable
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed'); // Use the message from the server
+      }
+
+      console.log("Success:", data);
+      navigate('/profile', { state: { user: data.data } });
+    } catch (error) {
+      setErrorMessage(error.message); // Set error message to display
+      console.error("Error:", error);
+    }
   };
 
   const handleGoogleSignIn = async (credentialResponse) => {
+    
     const { credential } = credentialResponse;
     console.log("Google sign-in response:", credential);
     try {
