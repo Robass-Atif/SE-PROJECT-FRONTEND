@@ -19,7 +19,7 @@ const LandingPage = () => {
                         </p>
 
                         <div className="mt-6">
-                            <Link to='/signup'>
+                            <Link to='/role-selection'>
 
                                 <button className="bg-white text-custom-violet border border-custom-violet py-3 px-8 rounded-md font-semibold hover:bg-gray-100 hover:shadow-xl transition-transform transform hover:scale-105">
                                     Get Started
@@ -135,3 +135,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

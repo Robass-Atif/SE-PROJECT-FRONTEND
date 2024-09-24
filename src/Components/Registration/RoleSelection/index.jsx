@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -6,8 +6,17 @@ const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
 
+  // Initialize state with value from localStorage
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    if (storedRole) {
+      setSelectedRole(storedRole);
+    }
+  }, []);
+
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
+    localStorage.setItem("role", role); // Save selected role to localStorage
   };
 
   const handleCreateAccount = () => {
@@ -48,7 +57,7 @@ const RoleSelection = () => {
               />
             </div>
             <p className="font-medium text-gray-900 text-lg">
-              I’m a client, hiring for a project
+              I’m a client, looking for services
             </p>
           </motion.div>
 
@@ -75,7 +84,7 @@ const RoleSelection = () => {
               />
             </div>
             <p className="font-medium text-gray-900 text-lg">
-              I’m a freelancer, looking for work
+              I’m a service provider, looking for work
             </p>
           </motion.div>
         </div>
@@ -99,7 +108,7 @@ const RoleSelection = () => {
         <p className="mt-6 text-center text-gray-700">
           Already have an account?{" "}
           <span
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/signin")}
             className="text-indigo-600 hover:underline cursor-pointer"
           >
             Log In

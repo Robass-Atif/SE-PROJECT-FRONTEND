@@ -1,18 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom"; // Import Link
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 
+
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+
+
+
+
+
 function SignIn() {
+  const navigate = useNavigate(); // Initialize navigate
+  const [email, setEmail] = useState(""); // State for email
+  const [password, setPassword] = useState(""); // State for password
+
+  const handleLogin = () => {
+    // Retrieve role from localStorage
+    const role = localStorage.getItem("role");
+
+    // Determine route based on role
+    const route = role === "freelancer" ? "/addservice" : "/services";
+
+    // Navigate to the appropriate route
+    navigate(route);
+  };
+
+  const handleGoogleSignIn = async (credentialResponse) => {
+    const { credential } = credentialResponse;
+    console.log("Google sign-in response:", credential);
+    try {
+      const response = await fetch("http://localhost:8080/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: credential }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("User signed in:", data.user);
+        navigate("/profile"); // Redirect to the profile page
+      } else {
+        console.error("Error signing in:", data.error);
+      }
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+    }
+  };
+
   return (
-    <>
-      {/* Main login form */}
+    <GoogleOAuthProvider clientId="697063750023-7nha10stlk2j37gijq3p2kvgbmpmpu9r.apps.googleusercontent.com">
       <main className="flex justify-center items-center bg-gray-50 p-4 min-h-screen">
         <form className="bg-white shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md">
           <h3 className="mb-6 font-semibold text-black text-center text-xl sm:text-2xl">
             Log in to Your Account
           </h3>
 
+          {/* Username or Email Field */}
           <div className="relative flex flex-col mb-4">
             <label
               htmlFor="username"
@@ -23,16 +70,14 @@ function SignIn() {
             <input
               type="email"
               id="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Controlled input
               placeholder="Email or phone"
-              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-green-500 w-full text-sm sm:text-base focus:outline-none"
+              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none"
             />
           </div>
 
-          {/* Error message for email */}
-          <span className="mb-4 text-red-500 text-xs sm:text-sm">
-            Email error message goes here
-          </span>
-
+          {/* Password Field */}
           <div className="relative flex flex-col mb-4">
             <label
               htmlFor="password"
@@ -40,26 +85,26 @@ function SignIn() {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Type your password"
-              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-green-500 w-full text-sm sm:text-base focus:outline-none"
-            />
-            <img
-              src={passwordshow}
-              alt="Show password"
-              className="top-10 right-4 absolute w-5 h-5 cursor-pointer"
-            />
+            <div className="relative flex items-center">
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // Controlled input
+                placeholder="Type your password"
+                className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none pr-10"
+              />
+              <img
+                src={passwordshow}
+                alt="Show password"
+                className="absolute right-3 w-5 h-5 cursor-pointer"
+              />
+            </div>
           </div>
 
-          {/* Error message for password */}
-          <span className="mb-4 text-red-500 text-xs sm:text-sm">
-            Password error message goes here
-          </span>
-
           <button
-            type="submit"
+            type="button"
+            onClick={handleLogin}
             className="bg-[#5433FF] hover:bg-indigo-600 py-3 rounded-full w-full font-medium text-sm text-white sm:text-base transition duration-300"
           >
             Log In
@@ -70,10 +115,13 @@ function SignIn() {
             <span className="mx-2">or</span>
             <div className="bg-gray-300 w-full h-px"></div>
           </div>
-
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
-            <img src={google} alt="Google" className="mr-2 w-5 h-5" />
-            Continue with Google
+            <GoogleLogin
+              onSuccess={handleGoogleSignIn}
+              onError={(error) => {
+                console.error("Google sign-in failed:", error);
+              }}
+            />
           </button>
 
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
@@ -83,13 +131,14 @@ function SignIn() {
 
           <div className="mt-6 text-center text-gray-500 text-xs sm:text-sm">
             Don’t have an account?
-            <a
-              href="/signup"
-              className="ml-1 font-medium hover:underline"
-              style={{ color: "#5433FF" }}
-            >
-              Sign Up now
-            </a>
+            <Link to="/signup">
+              <span
+                className="ml-1 font-medium hover:underline"
+                style={{ color: "#5433FF" }}
+              >
+                Sign Up now
+              </span>
+            </Link>
           </div>
         </form>
       </main>
@@ -102,7 +151,7 @@ function SignIn() {
           </p>
         </div>
       </footer>
-    </>
+    </GoogleOAuthProvider>
   );
 }
 
