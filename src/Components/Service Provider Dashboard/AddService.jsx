@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 const AddServiceMultiStepForm = () => {
   const [step, setStep] = useState(1);
 
-  // Form State for each step
   const [formData, setFormData] = useState({
     serviceTitle: "",
     serviceCategory: "",
@@ -21,7 +21,6 @@ const AddServiceMultiStepForm = () => {
     detailedPricing: "",
   });
 
-  // Handle change in form inputs
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -29,15 +28,13 @@ const AddServiceMultiStepForm = () => {
     });
   };
 
-  // Handle file input change for cover image
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      coverImage: e.target.files[0], // Store the selected image file
+      coverImage: e.target.files[0],
     });
   };
 
-  // Navigation functions for next and previous steps
   const nextStep = () => {
     if (step < 6) {
       setStep(step + 1);
@@ -50,9 +47,50 @@ const AddServiceMultiStepForm = () => {
     }
   };
 
-  // Final submission
-  const handleSubmit = (e) => {
+  // Define the mutation using TanStack Query
+  const mutation = useMutation({
+    mutationFn: async (newService) => {
+      for (const [key, value] of newService.entries()) {
+        console.log(`${key}:`, value);
+      }
+      const response = await fetch("http://localhost:8080/serviceProvider/add-service", {
+        method: "POST",
+        body: newService, // Send FormData directly
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      return data;
+    },
+    onSuccess: () => {
+      alert("Service added successfully!");
+      // Optionally reset form or navigate
+    },
+    onError: (error) => {
+      console.error("Error adding service:", error);
+      alert("Failed to add service.");
+    },
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Prepare data to send to the backend using FormData
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.serviceTitle);
+    formDataToSend.append("category", formData.serviceCategory);
+    formDataToSend.append("price", formData.servicePrice);
+    formDataToSend.append("delivery_time", formData.deliveryTime);
+    formDataToSend.append("description", formData.serviceDescription);
+    formDataToSend.append("service_images", formData.coverImage);
+    const userId = "66f2c46b560c53a133c31df9"; // Replace with your hardcoded user ID
+    formDataToSend.append("user_id", userId); // Include the userId in the request data
+
+    // Use the mutation to send data
+    mutation.mutate(formDataToSend);
     console.log("Form Data Submitted:", formData);
     // Submit logic without alert
   };

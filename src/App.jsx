@@ -16,13 +16,18 @@ import FreelancerProfile from "./Components/Review/FreelancerProfile";
 import ProfileRoutes from "./Components/Routes/ProfileRoutes";
 import SettingsRoutes from "./Components/Routes/SettingsRoutes";
 import EditProfile from "./Components/Profile/EditProfile";
+import ManageServices from "./Components/Service Provider Dashboard/ManageServices";
+import EditService from "./Components/Service Provider Dashboard/EditService"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <Router>
-      <Navbar />
-      <Routes>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Navbar />
+        <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/role-selection" element={<RoleSelection />} />
         <Route path="/signup" element={<Signup />} />
@@ -38,10 +43,12 @@ function App() {
         <Route path="/profile/*" element={<ProfileRoutes />} />
         <Route path="/settings/*" element={<SettingsRoutes />} />
         <Route path="/editprofile" element={<EditProfile />} />
+        <Route path="/manage-services" element={<ManageServices />} />
+        <Route path="/edit-service" element={<EditService />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
 
-      </Routes>
-    </Router>
-  );
-}
+)}
 
 export default App;

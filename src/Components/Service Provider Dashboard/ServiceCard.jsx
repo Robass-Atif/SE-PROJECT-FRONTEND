@@ -1,10 +1,11 @@
 import React from 'react';
 
 const ServiceCard = ({ service }) => {
+    const image = service.service_images[0]
     return (
         <div className="bg-white p-4 rounded-lg shadow-md relative hover:shadow-lg transition-shadow">
             <img
-                src={service.image}
+                src={image}
                 alt={service.title}
                 className="w-full h-32 object-cover rounded-md mb-4"
             />

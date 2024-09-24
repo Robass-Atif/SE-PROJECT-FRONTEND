@@ -1,33 +1,79 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom"; 
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
-import { Link } from "react-router-dom";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function SignIn() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
-  const handleLogin = () => {
-    // Retrieve role from localStorage
+  const handleLogin = async (e) => {
+    e.preventDefault();
     const role = localStorage.getItem("role");
-
-    // Determine route based on role
     const route = role === "freelancer" ? "/addservice" : "/services";
 
-    // Navigate to the appropriate route
-    navigate(route);
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json(); // Store the response in a variable
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed'); // Use the message from the server
+      }
+
+      console.log("Success:", data);
+      navigate('/profile', { state: { user: data.data } });
+    } catch (error) {
+      setErrorMessage(error.message); // Set error message to display
+      console.error("Error:", error);
+    }
+  };
+
+  const handleGoogleSignIn = async (credentialResponse) => {
+    
+    const { credential } = credentialResponse;
+    console.log("Google sign-in response:", credential);
+    try {
+      const response = await fetch("http://localhost:8080/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: credential }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("User signed in:", data.user);
+        navigate("/profile"); // Redirect to the profile page
+      } else {
+        console.error("Error signing in:", data.error);
+      }
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+    }
   };
 
   return (
-    <>
-      {/* Main login form */}
+    <GoogleOAuthProvider clientId="697063750023-7nha10stlk2j37gijq3p2kvgbmpmpu9r.apps.googleusercontent.com">
       <main className="flex justify-center items-center bg-gray-50 p-4 min-h-screen">
         <form className="bg-white shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md">
           <h3 className="mb-6 font-semibold text-black text-center text-xl sm:text-2xl">
             Log in to Your Account
           </h3>
 
+          {/* Username or Email Field */}
           <div className="relative flex flex-col mb-4">
             <label
               htmlFor="username"
@@ -38,11 +84,14 @@ function SignIn() {
             <input
               type="email"
               id="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Controlled input
               placeholder="Email or phone"
               className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none"
             />
           </div>
 
+          {/* Password Field */}
           <div className="relative flex flex-col mb-4">
             <label
               htmlFor="password"
@@ -54,6 +103,8 @@ function SignIn() {
               <input
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // Controlled input
                 placeholder="Type your password"
                 className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none pr-10"
               />
@@ -78,10 +129,13 @@ function SignIn() {
             <span className="mx-2">or</span>
             <div className="bg-gray-300 w-full h-px"></div>
           </div>
-
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
-            <img src={google} alt="Google" className="mr-2 w-5 h-5" />
-            Continue with Google
+            <GoogleLogin
+              onSuccess={handleGoogleSignIn}
+              onError={(error) => {
+                console.error("Google sign-in failed:", error);
+              }}
+            />
           </button>
 
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
@@ -91,7 +145,7 @@ function SignIn() {
 
           <div className="mt-6 text-center text-gray-500 text-xs sm:text-sm">
             Don’t have an account?
-            <Link to='/signup'>
+            <Link to="/signup">
               <span
                 className="ml-1 font-medium hover:underline"
                 style={{ color: "#5433FF" }}
@@ -111,7 +165,7 @@ function SignIn() {
           </p>
         </div>
       </footer>
-    </>
+    </GoogleOAuthProvider>
   );
 }
 
