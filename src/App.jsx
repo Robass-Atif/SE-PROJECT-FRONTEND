@@ -17,6 +17,7 @@ import ProfileRoutes from "./Components/Routes/ProfileRoutes";
 import SettingsRoutes from "./Components/Routes/SettingsRoutes";
 import EditProfile from "./Components/Profile/EditProfile";
 
+
 function App() {
   return (
     <Router>

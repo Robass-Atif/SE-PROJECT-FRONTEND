@@ -1,40 +1,80 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { app } from '../../../firebase'
+
 
 const EditProfile = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
+  const [file, setFile] = useState(undefined);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [customSkill, setCustomSkill] = useState('');
   const [showCustomSkillInput, setShowCustomSkillInput] = useState(false);
+  const [languageProficiency, setLanguageProficiency] = useState({});
+  const [fileProgress, setFileProgress] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(null);
+  const [formData , setFormData] = useState(null)
+  const [isUploading, setIsUploading] = useState(false);
+  const languages = ['Urdu' , 'English', 'Spanish', 'French', 'German', 'Hindi'];
+  const proficiencies = ['Beginner', 'Intermediate', 'Fluent', 'Native'];
+  const skills = ['Electrican', 'Plumbing', 'Carpanter', 'Gardner', 'Other'];
 
-  const languages = ['English', 'Spanish', 'French', 'German', 'Hindi'];
-  const skills = ['JavaScript', 'React', 'Node.js', 'Python', 'Other'];
+  const user_id = '66f2c46b560c53a133c31df9'
 
   const onSubmit = (data) => {
     const profileData = {
+      ...formData,
       ...data,
-      profileImage, // Include the profile image URL
-      skills: selectedSkills, // Include selected skills
-      languages: selectedLanguages, // Include selected languages
+      skills: selectedSkills,
+      languages: selectedLanguages.map(lang => ({
+        name: lang,
+        level: languageProficiency[lang] 
+      })), 
     };
   
-    console.log(profileData);
-    // Here you can send profileData to your backend or wherever you need to store it
+    
   };
 
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+
+  const handleFileUpload = (file) => {
+    
+    setIsUploading(true); // Set uploading flag to true
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const fileRef = ref(storage, fileName);
+
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      setFileProgress(Math.round(progress));
+      console.log(Math.round(progress))
+
+    }, (error) => {
+      setFileUploadError(true);
+      setIsUploading(false); // Reset uploading flag on error
+
+    }, () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+        console.log(downloadUrl)
+        setFormData((prevFormData) => ({ ...prevFormData, profile_image: downloadUrl }));
+        setIsUploading(false); // Reset uploading flag after upload completes
+        setFile(null); // Reset file state to prevent re-triggering
+      });
+    });
+  };
+
+  const handleFileChange = (e) => {
+    
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      handleFileUpload(selectedFile); // Call the upload function directly
     }
   };
+
 
   const handleImageClick = () => {
     fileInputRef.current.click();
@@ -44,6 +84,7 @@ const EditProfile = () => {
     const lang = e.target.value;
     if (lang && !selectedLanguages.includes(lang)) {
       setSelectedLanguages([...selectedLanguages, lang]);
+      setLanguageProficiency({ ...languageProficiency, [lang]: '' }); // Initialize proficiency level for new language
     }
   };
 
@@ -66,9 +107,16 @@ const EditProfile = () => {
     }
   };
 
+  const handleProficiencyChange = (lang, level) => {
+    setLanguageProficiency({ ...languageProficiency, [lang]: level });
+  };
+
   const removeItem = (item, type) => {
     if (type === 'language') {
       setSelectedLanguages(selectedLanguages.filter((lang) => lang !== item));
+      const updatedProficiency = { ...languageProficiency };
+      delete updatedProficiency[item]; // Remove proficiency for deleted language
+      setLanguageProficiency(updatedProficiency);
     } else {
       setSelectedSkills(selectedSkills.filter((skill) => skill !== item));
     }
@@ -78,7 +126,7 @@ const EditProfile = () => {
     <div className="flex justify-center items-center min-h-screen">
       <div className="p-6 w-full max-w-2xl">
         <h2 className="text-2xl font-bold mb-4 text-center">Profile</h2>
-        
+
         <div className="flex justify-center mb-4">
           <div className="relative">
             <input
@@ -86,7 +134,7 @@ const EditProfile = () => {
               ref={fileInputRef}
               className="absolute w-full h-full opacity-0"
               accept="image/*"
-              onChange={handleFileInputChange}
+              onChange={handleFileChange}
             />
             <img
               src={profileImage || 'https://via.placeholder.com/150'}
@@ -103,22 +151,12 @@ const EditProfile = () => {
             <input
               className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none pr-10"
               id="firstName"
-              placeholder="First Name"
-              {...register('firstName', { required: 'First Name is required' })}
+              placeholder="Full Name"
+              {...register('firstName', { required: 'Name is required' })}
             />
             {errors.firstName && <p className="text-red-500 text-xs italic">{errors.firstName.message}</p>}
           </div>
 
-          {/* Last Name */}
-          <div className="mb-4 w-full">
-            <input
-              className="border-gray-300 p-3 border rounded-lg focus:ring-2 focus:ring-custom-violet w-full text-sm sm:text-base focus:outline-none pr-10"
-              id="lastName"
-              placeholder="Last Name"
-              {...register('lastName', { required: 'Last Name is required' })}
-            />
-            {errors.lastName && <p className="text-red-500 text-xs italic">{errors.lastName.message}</p>}
-          </div>
 
           {/* Address */}
           <div className="mb-4 w-full">
@@ -157,11 +195,18 @@ const EditProfile = () => {
             </select>
             <div className="flex flex-wrap gap-2 mt-2">
               {selectedLanguages.map((lang) => (
-                <div
-                  key={lang}
-                  className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full flex items-center"
-                >
+                <div key={lang} className="flex items-center bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                   {lang}
+                  <select
+                    className="ml-2 border-gray-300 p-1 rounded-lg"
+                    value={languageProficiency[lang] || ""}
+                    onChange={(e) => handleProficiencyChange(lang, e.target.value)}
+                  >
+                    <option value="" disabled>Select proficiency</option>
+                    {proficiencies.map((level) => (
+                      <option key={level} value={level}>{level}</option>
+                    ))}
+                  </select>
                   <button
                     type="button"
                     className="ml-2 text-red-500"
@@ -192,8 +237,8 @@ const EditProfile = () => {
             {showCustomSkillInput && (
               <input
                 type="text"
-                className="border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-custom-violet w-full mt-2"
-                placeholder="Add Custom Skill"
+                className="border-gray-300 p-2 rounded-lg mt-2 w-full"
+                placeholder="Enter custom skill"
                 value={customSkill}
                 onChange={(e) => setCustomSkill(e.target.value)}
                 onKeyDown={handleCustomSkillInput}
@@ -202,10 +247,7 @@ const EditProfile = () => {
 
             <div className="flex flex-wrap gap-2 mt-2">
               {selectedSkills.map((skill) => (
-                <div
-                  key={skill}
-                  className="bg-green-100 text-green-700 px-3 py-1 rounded-full flex items-center"
-                >
+                <div key={skill} className="flex items-center bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                   {skill}
                   <button
                     type="button"
@@ -220,11 +262,12 @@ const EditProfile = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-center w-full">
-          <button className="bg-[#5469D4] hover:bg-[#4353A3] mt-4 px-4 py-2 rounded-lg text-white transition duration-300">
-          Save Changes
-        </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-custom-violet text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition duration-300"
+          >
+            Save Changes
+          </button>
         </form>
       </div>
     </div>
