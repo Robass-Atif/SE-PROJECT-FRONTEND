@@ -14,27 +14,35 @@ import LandingPage from "./Pages/LandingPage";
 import TrustSafety from "./Components/Rules/index";
 import AddService from "./Components/Service Provider Dashboard/AddService";
 import UpdateService from "./Components/Service Provider Dashboard/updateService";
+import ManageServices from "./Components/Service Provider Dashboard/ManageServices";
+import EditService from "./Components/Service Provider Dashboard/EditService"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/role-selection" element={<RoleSelection />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/editprofile" element={<EditProfile />} />
-        <Route path="/rule" element={<TrustSafety />} />
-        <Route path="/message" element={<MessageSection />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/addservice" element={<AddService />} />
-        <Route path="/updateservice" element={<UpdateService />} />
-        <Route path="/dashboard" element={<ServiceProviderDashboard />} />
-        <Route path="/review" element={<FreelancerProfile />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/role-selection" element={<RoleSelection />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/rule" element={<TrustSafety />} />
+          <Route path="/message" element={<MessageSection />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/addservice" element={<AddService />} />
+          <Route path="/updateservice" element={<UpdateService />} />
+          <Route path="/dashboard" element={<ServiceProviderDashboard />} />
+          <Route path="/review" element={<FreelancerProfile />} />
+          <Route path="/manage-services" element={<ManageServices />} />
+          <Route path="/edit-service" element={<EditService />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
