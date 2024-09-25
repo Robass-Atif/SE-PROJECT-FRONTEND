@@ -18,7 +18,7 @@ function SignIn() {
     const route = role === "freelancer" ? "/addservice" : "/services";
 
     try {
-      const response = await fetch("http://localhost:8080/api/login", {
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,9 +31,11 @@ function SignIn() {
       if (!response.ok) {
         throw new Error(data.message || 'Login failed'); // Use the message from the server
       }
-
+      else
+      {
       console.log("Success:", data);
       navigate('/profile', { state: { user: data.data } });
+      }
     } catch (error) {
       setErrorMessage(error.message); // Set error message to display
       console.error("Error:", error);
@@ -45,7 +47,7 @@ function SignIn() {
     const { credential } = credentialResponse;
     console.log("Google sign-in response:", credential);
     try {
-      const response = await fetch("http://localhost:8080/auth/google", {
+      const response = await fetch("https://sebackend-za96l0pv.b4a.run/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

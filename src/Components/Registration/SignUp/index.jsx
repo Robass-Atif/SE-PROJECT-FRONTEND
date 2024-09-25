@@ -6,13 +6,13 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',  // Changed from firstName and lastName to fullName
-    email: '',
-    password: '',
+    fullName: "", // Changed from firstName and lastName to fullName
+    email: "",
+    password: "",
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e) => {
@@ -32,24 +32,23 @@ const Signup = () => {
     const fullName = `${firstName} ${lastName}`;
 
     try {
-      const response = await fetch("http://localhost:8080/api/signup", {
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fullName, email, password }),  // Sending fullName
+        body: JSON.stringify({ fullName, email, password }), // Sending fullName
       });
 
-      if (!response.ok) {
+      if (!response.success) {
+        console.log(response);
         throw new Error("Signup failed!");
+      } else {
+        const data = await response.json();
+        console.log("Signup successful:", data);
+        // Handle successful signup (e.g., redirect or show a success message)
+        navigate("/signin");
       }
-
-      const data = await response.json();
-      console.log("Signup successful:", data);
-      // Handle successful signup (e.g., redirect or show a success message)
-      navigate("/signin");
-
-
     } catch (error) {
       console.error("Error:", error);
       // Handle errors (e.g., show an error message to the user)
@@ -77,7 +76,10 @@ const Signup = () => {
         ></div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="border-gray-200 bg-white shadow-md mx-4 sm:mx-auto p-6 sm:p-8 border rounded-lg w-full max-w-md sm:max-w-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="border-gray-200 bg-white shadow-md mx-4 sm:mx-auto p-6 sm:p-8 border rounded-lg w-full max-w-md sm:max-w-lg"
+        >
           <h2 className="mb-6 font-semibold text-center text-gray-800 text-xl sm:text-2xl">
             Sign up to find work you love
           </h2>
@@ -104,7 +106,10 @@ const Signup = () => {
           {/* Name Inputs */}
           <div className="flex sm:flex-row flex-col gap-4 mb-4">
             <div className="flex-1">
-              <label htmlFor="firstname" className="block mb-2 text-sm sm:text-base">
+              <label
+                htmlFor="firstname"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 First Name
               </label>
               <input
@@ -119,7 +124,10 @@ const Signup = () => {
               />
             </div>
             <div className="flex-1">
-              <label htmlFor="lastname" className="block mb-2 text-sm sm:text-base">
+              <label
+                htmlFor="lastname"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 Last Name
               </label>
               <input
@@ -154,7 +162,10 @@ const Signup = () => {
 
           {/* Password Input */}
           <div className="relative mb-4">
-            <label htmlFor="password" className="block mb-2 text-sm sm:text-base">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm sm:text-base"
+            >
               Password
             </label>
             <input
@@ -202,10 +213,8 @@ const Signup = () => {
           {/* Login Link */}
           <p className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to='/signin'>
-              <span className="text-indigo-600 hover:underline">
-                Log In
-              </span>
+            <Link to="/signin">
+              <span className="text-indigo-600 hover:underline">Log In</span>
             </Link>
           </p>
         </form>
