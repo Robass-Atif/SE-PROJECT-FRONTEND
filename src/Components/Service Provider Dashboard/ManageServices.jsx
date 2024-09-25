@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 
 const fetchUserServices = async (userId) => {
-    const response = await fetch(`http://localhost:8080/serviceProvider/get-user-services/${userId}`);
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-user-services/${userId}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
@@ -12,7 +12,7 @@ const fetchUserServices = async (userId) => {
 };
 
 const deleteUserService = async (serviceId) => {
-    const response = await fetch(`http://localhost:8080/serviceProvider/delete-service/${serviceId}`, {
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/delete-service/${serviceId}`, {
         method: 'DELETE',
     });
     if (!response.ok) {
@@ -46,7 +46,6 @@ const ManageServices = () => {
     };
 
     const handleConfirmDelete = () => {
-        console.log(confirmDelete.serviceId)
         if (confirmDelete.serviceId) {
             deleteMutation.mutate(confirmDelete.serviceId);
             setConfirmDelete({ show: false, serviceId: null });

@@ -4,7 +4,7 @@ import ServiceCard from './ServiceCard';
 import { Link } from 'react-router-dom';
 
 const fetchUserServices = async (userId) => {
-    const response = await fetch(`http://localhost:8080/serviceProvider/get-user-services/${userId}`);
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-user-services/${userId}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }

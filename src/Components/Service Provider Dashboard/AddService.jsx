@@ -1,8 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../../firebase";
 
 const AddServiceMultiStepForm = () => {
+  const navigate = useNavigate()
+
+  const fileInputRef = useRef(null);
+  const [fileProgress, setFileProgress] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [file, setFile] = useState(undefined);
+
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -22,6 +37,42 @@ const AddServiceMultiStepForm = () => {
     detailedPricing: "",
   });
 
+  const handleFileUpload = (file) => {
+    console.log(file);
+    setIsUploading(true); // Set uploading flag to true
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const fileRef = ref(storage, fileName);
+
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFileProgress(Math.round(progress));
+        console.log(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+        setIsUploading(false); // Reset uploading flag on error
+        console.error("Upload error:", error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+          console.log("File available at:", downloadUrl);
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            coverImage: downloadUrl,
+          }));
+          setIsUploading(false); // Reset uploading flag after upload completes
+          setFile(null); // Reset file state to prevent re-triggering
+        });
+      }
+    );
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -30,10 +81,10 @@ const AddServiceMultiStepForm = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      coverImage: 'image.png',
-    });
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      handleFileUpload(selectedFile); // Pass the selected file to handleFileUpload
+    }
   };
 
   const nextStep = () => {
@@ -47,84 +98,47 @@ const AddServiceMultiStepForm = () => {
       setStep(step - 1);
     }
   };
-  const handleServiceUpdate = async (updatedServiceData) => {
-    //const serviceId = '66f2c46c560c53a133c31dfe'; // Use the correct property for the service ID
-    const userId = '66f2c46b560c53a133c31dfb'
-    const dataToSend = {formData, userId}
-    console.log(dataToSend)
+  const handleServiceAdd = async () => {
+    const userId = "66f2c46b560c53a133c31dfb";
+    const dataToSend = { formData, userId };
     try {
-      const response = await fetch('http://localhost:8080/serviceProvider/add-service', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend)
-      });
-    
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+      const response = await fetch(
+        "https://backend-qyb4mybn.b4a.run/serviceProvider/add-service",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
         }
-
-        const data = await response.json();
-        alert("Service updated successfully!");
-        //Navigate("/dashboard"); // Redirect after success
-        return data;
-    } catch (error) {
-        console.error("Error updating service:", error);
-        alert("Failed to update service.");
-    }
-  };
-
-  // Define the mutation using TanStack Query
-  const mutation = useMutation({
-    mutationFn: async () => {
-      console.log(formData)
-      const response = await fetch("http://localhost:8080/serviceProvider/add-service", {
-        method: "POST",
-        body: formData, // Send FormData directly
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
       const data = await response.json();
+      alert("Service Added successfully!");
+      navigate("/dashboard"); // Redirect after success
       return data;
-    },
-    onSuccess: () => {
-      alert("Service added successfully!");
-      // Optionally reset form or navigate
-    },
-    onError: (error) => {
-      console.error("Error adding service:", error);
-      alert("Failed to add service.");
-    },
-  });
+    } catch (error) {
+      console.error("Error updating service:", error);
+      alert("Failed to added service.");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userId = "66f2c46b560c53a133c31df9"
+    const userId = "66f2c46b560c53a133c31df9";
     setFormData({
       ...formData,
-      "user_id": userId,
+      user_id: userId,
     });
-
-    
-    // Prepare data to send to the backend using FormData
-    // let formDataToSend = new FormData();
-    // formDataToSend.append("title", formData.serviceTitle);
-    // formDataToSend.append("category", formData.serviceCategory);
-    // formDataToSend.append("price", formData.servicePrice);
-    // formDataToSend.append("delivery_time", formData.deliveryTime);
-    // formDataToSend.append("description", formData.serviceDescription);
-    // //formDataToSend.append("service_images", formData.coverImage);
-    // const userId = "66f2c46b560c53a133c31df9"; // Replace with your hardcoded user ID
-    //formDataToSend.append("user_id", userId); // Include the userId in the request data
-
     // Use the mutation to send data
-    handleServiceUpdate(formData)
-    
+    if (step === 6) {
+      handleServiceAdd();
+    }
+
     // Submit logic without alert
   };
 
@@ -140,7 +154,10 @@ const AddServiceMultiStepForm = () => {
           {step === 1 && (
             <div className="space-y-6">
               <div>
-                <label htmlFor="serviceTitle" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="serviceTitle"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Title
                 </label>
                 <input
@@ -155,7 +172,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="serviceCategory" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="serviceCategory"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Category
                 </label>
                 <select
@@ -179,7 +199,10 @@ const AddServiceMultiStepForm = () => {
           {step === 2 && (
             <div className="space-y-6">
               <div>
-                <label htmlFor="servicePrice" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="servicePrice"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Price (USD)
                 </label>
                 <input
@@ -194,7 +217,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="deliveryTime" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="deliveryTime"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Delivery Time (Days)
                 </label>
                 <input
@@ -209,7 +235,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="detailedPricing" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="detailedPricing"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Detailed Pricing (Optional)
                 </label>
                 <textarea
@@ -229,7 +258,10 @@ const AddServiceMultiStepForm = () => {
           {step === 3 && (
             <div className="space-y-6">
               <div>
-                <label htmlFor="serviceDescription" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="serviceDescription"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Description
                 </label>
                 <textarea
@@ -244,7 +276,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="additionalFeatures" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="additionalFeatures"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Additional Features (Optional)
                 </label>
                 <textarea
@@ -264,7 +299,10 @@ const AddServiceMultiStepForm = () => {
           {step === 4 && (
             <div className="space-y-6">
               <div>
-                <label htmlFor="serviceKeywords" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="serviceKeywords"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Keywords
                 </label>
                 <input
@@ -279,7 +317,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="serviceTags" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="serviceTags"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Tags (Comma Separated)
                 </label>
                 <input
@@ -299,7 +340,10 @@ const AddServiceMultiStepForm = () => {
           {step === 5 && (
             <div className="space-y-6">
               <div>
-                <label htmlFor="serviceLocation" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="serviceLocation"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Service Location
                 </label>
                 <input
@@ -314,7 +358,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="availabilityStart" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="availabilityStart"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Availability Start Time
                 </label>
                 <input
@@ -328,7 +375,10 @@ const AddServiceMultiStepForm = () => {
               </div>
 
               <div>
-                <label htmlFor="availabilityEnd" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="availabilityEnd"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Availability End Time
                 </label>
                 <input
@@ -347,7 +397,10 @@ const AddServiceMultiStepForm = () => {
           {step === 6 && (
             <div className="space-y-6">
               <div>
-                <label htmlFor="coverImage" className="block text-gray-700 font-medium mb-2">
+                <label
+                  htmlFor="coverImage"
+                  className="block text-gray-700 font-medium mb-2"
+                >
                   Upload Cover Image
                 </label>
                 <input
@@ -355,6 +408,7 @@ const AddServiceMultiStepForm = () => {
                   id="coverImage"
                   name="coverImage"
                   accept="image/*"
+                  ref={fileInputRef}
                   onChange={handleFileChange}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
                 />
