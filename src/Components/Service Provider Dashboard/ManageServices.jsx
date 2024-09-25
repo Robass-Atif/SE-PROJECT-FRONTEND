@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+
 const fetchUserServices = async (userId) => {
-    const response = await fetch(`http://localhost:8080/get-user-services/${userId}`);
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-user-services/${userId}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
@@ -11,7 +12,7 @@ const fetchUserServices = async (userId) => {
 };
 
 const deleteUserService = async (serviceId) => {
-    const response = await fetch(`http://localhost:8080/serviceProvider/delete-service/${serviceId}`, {
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/delete-service/${serviceId}`, {
         method: 'DELETE',
     });
     if (!response.ok) {
@@ -21,7 +22,7 @@ const deleteUserService = async (serviceId) => {
 };
 
 const ManageServices = () => {
-    const userId = '66f2c46b560c53a133c31df9'; // Example user ID
+    const userId = '66f2c46b560c53a133c31dfb'; // Example user ID
     const [confirmDelete, setConfirmDelete] = useState({ show: false, serviceId: null });
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -52,7 +53,7 @@ const ManageServices = () => {
     };
 
     const handleEdit = (service) => {
-        navigate(`/edit-service/`, { state: { service } });
+        navigate(`/edit-service/`, { state: { service }, serviceId: service.id });
     };
 
     if (isLoading) {
@@ -110,7 +111,7 @@ const ManageServices = () => {
                                         Edit
                                     </button>
                                     <button
-                                        onClick={() => handleDeleteClick(service.id)}
+                                        onClick={() => handleDeleteClick(service._id)}
                                         className="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600"
                                     >
                                         Delete

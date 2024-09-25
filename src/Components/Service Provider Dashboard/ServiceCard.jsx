@@ -1,7 +1,16 @@
 import React from 'react';
 
 const ServiceCard = ({ service }) => {
-    const image = service.service_images[0]
+    let image;
+    if (service && service.service_images && service.service_images[0])
+    {
+        image = service.service_images[0] 
+    }
+
+    else
+    {
+        image = 'https://via.placeholder.com/150'
+    }
     return (
         <div className="bg-white p-4 rounded-lg shadow-md relative hover:shadow-lg transition-shadow">
             <img

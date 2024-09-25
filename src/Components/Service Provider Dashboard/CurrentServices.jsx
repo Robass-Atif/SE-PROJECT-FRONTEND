@@ -4,7 +4,7 @@ import ServiceCard from './ServiceCard';
 import { Link } from 'react-router-dom';
 
 const fetchUserServices = async (userId) => {
-    const response = await fetch(`http://localhost:8080/serviceProvider/get-user-services/${userId}`);
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-user-services/${userId}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
@@ -12,7 +12,7 @@ const fetchUserServices = async (userId) => {
 };
 
 const Services = () => {
-    const userId = '66f2c46b560c53a133c31df9'; // Example user ID
+    const userId = '66f2c46b560c53a133c31dfb'; // Example user ID
 
     // Use the query to fetch services
     const { data: services = [], error, isLoading } = useQuery({
@@ -43,7 +43,7 @@ const Services = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
                     {services.map(service => (
                         <ServiceCard
-                            key={service.id}
+                            key={service._id}
                             service={service}
                         />
                     ))}
