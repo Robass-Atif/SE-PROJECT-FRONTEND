@@ -20,6 +20,7 @@ import ManageServices from "./Components/Service Provider Dashboard/ManageServic
 import EditService from "./Components/Service Provider Dashboard/EditService"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+
 function App() {
   const queryClient = new QueryClient();
   return (

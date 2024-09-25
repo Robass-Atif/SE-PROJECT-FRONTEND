@@ -1,12 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    fullName: "", // Changed from firstName and lastName to fullName
+    email: "",
+    password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   const handlePasswordShow = () => {
-    // Toggle password visibility functionality here
+    setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Merge first and last names
+    const { firstName, lastName, email, password } = formData;
+    const fullName = `${firstName} ${lastName}`;
+
+    try {
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fullName, email, password }), // Sending fullName
+      });
+
+      if (!response.success) {
+        console.log(response);
+        throw new Error("Signup failed!");
+      } else {
+        const data = await response.json();
+        console.log("Signup successful:", data);
+        // Handle successful signup (e.g., redirect or show a success message)
+        navigate("/signin");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle errors (e.g., show an error message to the user)
+    }
   };
 
   return (
@@ -30,7 +76,10 @@ const Signup = () => {
         ></div>
 
         {/* Form */}
-        <form className="border-gray-200 bg-white shadow-md mx-4 sm:mx-auto p-6 sm:p-8 border rounded-lg w-full max-w-md sm:max-w-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="border-gray-200 bg-white shadow-md mx-4 sm:mx-auto p-6 sm:p-8 border rounded-lg w-full max-w-md sm:max-w-lg"
+        >
           <h2 className="mb-6 font-semibold text-center text-gray-800 text-xl sm:text-2xl">
             Sign up to find work you love
           </h2>
@@ -66,8 +115,12 @@ const Signup = () => {
               <input
                 type="text"
                 id="firstname"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
                 className="border-gray-300 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 w-full focus:outline-none"
                 placeholder="Type here"
+                required
               />
             </div>
             <div className="flex-1">
@@ -80,8 +133,12 @@ const Signup = () => {
               <input
                 type="text"
                 id="lastname"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
                 className="border-gray-300 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 w-full focus:outline-none"
                 placeholder="Type here"
+                required
               />
             </div>
           </div>
@@ -94,8 +151,12 @@ const Signup = () => {
             <input
               type="email"
               id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               className="border-gray-300 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 w-full focus:outline-none"
               placeholder="Email"
+              required
             />
           </div>
 
@@ -108,10 +169,14 @@ const Signup = () => {
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               className="border-gray-300 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 w-full focus:outline-none"
               placeholder="Password (8 or more characters)"
+              required
             />
             <img
               src={passwordshow}
@@ -127,6 +192,7 @@ const Signup = () => {
               type="checkbox"
               id="checked"
               className="border-gray-300 rounded focus:ring-indigo-500 w-4 h-4 text-indigo-600"
+              required
             />
             <label
               htmlFor="checked"
@@ -137,22 +203,18 @@ const Signup = () => {
           </div>
 
           {/* Submit Button */}
-          <Link to='/signin'>
-            <button
-              type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors"
-            >
-              Create My Account
-            </button>
-          </Link>
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors"
+          >
+            Create My Account
+          </button>
 
           {/* Login Link */}
           <p className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to='/signin'>
-              <span className="text-indigo-600 hover:underline">
-                Log In
-              </span>
+            <Link to="/signin">
+              <span className="text-indigo-600 hover:underline">Log In</span>
             </Link>
           </p>
         </form>
