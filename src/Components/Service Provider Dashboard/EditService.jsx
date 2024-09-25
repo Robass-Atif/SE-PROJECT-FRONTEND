@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const EditService = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const service = location.state?.service;
+    const serviceId = location.state?.service?._id;
 
     // Form state with pre-filled data
     const [formData, setFormData] = useState({
@@ -34,60 +34,62 @@ const EditService = () => {
                 revisionCount: service.revisionCount,
                 serviceKeywords: service.serviceKeywords,
                 serviceTags: service.serviceTags,
-                coverImage: null,
+                coverImage: service.service_image,
             });
         }
     }, [service]);
 
-    // Mutation for updating the service
-    const mutation = useMutation({
-        mutationFn: async (updatedServiceData) => {
-            const serviceId = '66f2c46c560c53a133c31dfe'; // Use the correct property for the service ID
+    const handleServiceUpdate = async (updatedServiceData) => {
+        if (formData.coverImage == null || formData.coverImage == undefined)
+        {
+            setFormData({
+                serviceTitle: service.title,
+                serviceCategory: service.category,
+                servicePrice: service.price,
+                deliveryTime: service.deliveryTime,
+                serviceDescription: service.description,
+                additionalFeatures: service.additionalFeatures,
+                revisionCount: service.revisionCount,
+                serviceKeywords: service.serviceKeywords,
+                serviceTags: service.serviceTags,
+                coverImage: 'https://picsum.photos/id/237/200/300',
+            })
+        }
+        try {
             const response = await fetch(`http://localhost:8080/serviceProvider/edit-service/${serviceId}`, {
-                method: 'PATCH',
-                body: updatedServiceData, // Send FormData directly
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedServiceData)
             });
-
+    
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
-            return await response.json();
-        },
-        onSuccess: () => {
+    
+            const data = await response.json();
             alert("Service updated successfully!");
             navigate("/dashboard"); // Redirect after success
-        },
-        onError: (error) => {
+            return data;
+        } catch (error) {
             console.error("Error updating service:", error);
             alert("Failed to update service.");
-        },
-    });
-
-    // Handle form submit
+        }
+    };
+    
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Prepare data to send to the backend using FormData
-        const formDataToSend = new FormData();
-        formDataToSend.append("title", formData.serviceTitle);
-        formDataToSend.append("category", formData.serviceCategory);
-        formDataToSend.append("price", formData.servicePrice);
-        formDataToSend.append("delivery_time", formData.deliveryTime);
-        formDataToSend.append("description", formData.serviceDescription);
-        formDataToSend.append("service_images", formData.coverImage);
-        formDataToSend.append("additionalFeatures", formData.additionalFeatures);
-        formDataToSend.append("revisionCount", formData.revisionCount);
-        formDataToSend.append("serviceKeywords", formData.serviceKeywords);
-        formDataToSend.append("serviceTags", formData.serviceTags);
-
-        // Use the mutation to send data
-        mutation.mutate(formDataToSend);
+        handleServiceUpdate(formData)
     };
 
     // Handle cover image change
     const handleImageChange = (e) => {
-        setFormData({ ...formData, coverImage: e.target.files[0] });
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0]; // Get the first file from the input
+            setFormData({ ...formData, coverImage: file }); // Update formData with the selected image file
+        }    
     };
 
     return (

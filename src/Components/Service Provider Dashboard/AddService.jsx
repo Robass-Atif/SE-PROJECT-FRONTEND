@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { Navigate } from "react-router-dom";
 
 const AddServiceMultiStepForm = () => {
   const [step, setStep] = useState(1);
@@ -31,7 +32,7 @@ const AddServiceMultiStepForm = () => {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      coverImage: e.target.files[0],
+      coverImage: 'image.png',
     });
   };
 
@@ -46,16 +47,42 @@ const AddServiceMultiStepForm = () => {
       setStep(step - 1);
     }
   };
+  const handleServiceUpdate = async (updatedServiceData) => {
+    //const serviceId = '66f2c46c560c53a133c31dfe'; // Use the correct property for the service ID
+    const userId = '66f2c46b560c53a133c31dfb'
+    const dataToSend = {formData, userId}
+    console.log(dataToSend)
+    try {
+      const response = await fetch('http://localhost:8080/serviceProvider/add-service', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+      });
+    
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        alert("Service updated successfully!");
+        //Navigate("/dashboard"); // Redirect after success
+        return data;
+    } catch (error) {
+        console.error("Error updating service:", error);
+        alert("Failed to update service.");
+    }
+  };
 
   // Define the mutation using TanStack Query
   const mutation = useMutation({
-    mutationFn: async (newService) => {
-      for (const [key, value] of newService.entries()) {
-        console.log(`${key}:`, value);
-      }
+    mutationFn: async () => {
+      console.log(formData)
       const response = await fetch("http://localhost:8080/serviceProvider/add-service", {
         method: "POST",
-        body: newService, // Send FormData directly
+        body: formData, // Send FormData directly
       });
 
       if (!response.ok) {
@@ -77,21 +104,27 @@ const AddServiceMultiStepForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userId = "66f2c46b560c53a133c31df9"
+    setFormData({
+      ...formData,
+      "user_id": userId,
+    });
 
+    
     // Prepare data to send to the backend using FormData
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", formData.serviceTitle);
-    formDataToSend.append("category", formData.serviceCategory);
-    formDataToSend.append("price", formData.servicePrice);
-    formDataToSend.append("delivery_time", formData.deliveryTime);
-    formDataToSend.append("description", formData.serviceDescription);
-    formDataToSend.append("service_images", formData.coverImage);
-    const userId = "66f2c46b560c53a133c31df9"; // Replace with your hardcoded user ID
-    formDataToSend.append("user_id", userId); // Include the userId in the request data
+    // let formDataToSend = new FormData();
+    // formDataToSend.append("title", formData.serviceTitle);
+    // formDataToSend.append("category", formData.serviceCategory);
+    // formDataToSend.append("price", formData.servicePrice);
+    // formDataToSend.append("delivery_time", formData.deliveryTime);
+    // formDataToSend.append("description", formData.serviceDescription);
+    // //formDataToSend.append("service_images", formData.coverImage);
+    // const userId = "66f2c46b560c53a133c31df9"; // Replace with your hardcoded user ID
+    //formDataToSend.append("user_id", userId); // Include the userId in the request data
 
     // Use the mutation to send data
-    mutation.mutate(formDataToSend);
-    console.log("Form Data Submitted:", formData);
+    handleServiceUpdate(formData)
+    
     // Submit logic without alert
   };
 
