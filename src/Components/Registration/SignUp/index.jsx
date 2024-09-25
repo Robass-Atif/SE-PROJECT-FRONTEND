@@ -32,7 +32,7 @@ const Signup = () => {
     const fullName = `${firstName} ${lastName}`;
 
     try {
-      const response = await fetch("http://localhost:8080/api/signup", {
+      const response = await fetch("https://sebackend-za96l0pv.b4a.run/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
