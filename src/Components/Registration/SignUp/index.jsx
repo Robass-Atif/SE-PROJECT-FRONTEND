@@ -30,7 +30,7 @@ const Signup = () => {
     // Merge first and last names
     const { firstName, lastName, email, password } = formData;
     const fullName = `${firstName} ${lastName}`;
-
+    console.log("Form data:", { fullName, email, password });
     try {
       const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
         method: "POST",
