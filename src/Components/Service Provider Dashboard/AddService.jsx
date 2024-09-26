@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
@@ -10,14 +10,14 @@ import {
 import { app } from "../../../firebase";
 
 const AddServiceMultiStepForm = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const fileInputRef = useRef(null);
   const [fileProgress, setFileProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState(undefined);
-
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -74,6 +74,7 @@ const AddServiceMultiStepForm = () => {
   };
 
   const handleChange = (e) => {
+    e.preventDefault()
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -119,7 +120,7 @@ const AddServiceMultiStepForm = () => {
 
       const data = await response.json();
       alert("Service Added successfully!");
-      navigate("/dashboard"); // Redirect after success
+      //navigate("/dashboard"); // Redirect after success
       return data;
     } catch (error) {
       console.error("Error updating service:", error);
@@ -128,18 +129,14 @@ const AddServiceMultiStepForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const userId = "66f2c46b560c53a133c31df9";
-    setFormData({
-      ...formData,
-      user_id: userId,
-    });
-    // Use the mutation to send data
-    if (step === 6) {
-      handleServiceAdd();
+    e.preventDefault(); // Prevent form submission via browser
+    if (step === 6 && isSubmitClicked) {
+      await handleServiceAdd(); // Explicit service add
     }
+  };
 
-    // Submit logic without alert
+  const onSubmitClick = () => {
+    setIsSubmitClicked(true); // Set to true when submit button is clicked
   };
 
   return (
@@ -438,7 +435,7 @@ const AddServiceMultiStepForm = () => {
               </button>
             ) : (
               <button
-                type="submit"
+                onClick={onSubmitClick}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-md"
               >
                 Submit
