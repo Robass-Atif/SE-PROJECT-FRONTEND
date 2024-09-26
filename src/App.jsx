@@ -18,6 +18,7 @@ import SettingsRoutes from "./Components/Routes/SettingsRoutes";
 import EditProfile from "./Components/Profile/EditProfile";
 import ManageServices from "./Components/Service Provider Dashboard/ManageServices";
 import EditService from "./Components/Service Provider Dashboard/EditService";
+import Loader from "./Components/loader/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
