@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
@@ -8,16 +8,18 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../../firebase";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddServiceMultiStepForm = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const fileInputRef = useRef(null);
   const [fileProgress, setFileProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState(undefined);
-
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
   const [step, setStep] = useState(1);
 
   const [formData, setFormData] = useState({
@@ -38,7 +40,6 @@ const AddServiceMultiStepForm = () => {
   });
 
   const handleFileUpload = (file) => {
-    console.log(file);
     setIsUploading(true); // Set uploading flag to true
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -61,7 +62,6 @@ const AddServiceMultiStepForm = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          console.log("File available at:", downloadUrl);
           setFormData((prevFormData) => ({
             ...prevFormData,
             coverImage: downloadUrl,
@@ -74,6 +74,7 @@ const AddServiceMultiStepForm = () => {
   };
 
   const handleChange = (e) => {
+    e.preventDefault()
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -118,28 +119,43 @@ const AddServiceMultiStepForm = () => {
       }
 
       const data = await response.json();
-      alert("Service Added successfully!");
+      toast.success('Service Added successfully!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       navigate("/dashboard"); // Redirect after success
       return data;
     } catch (error) {
       console.error("Error updating service:", error);
-      alert("Failed to added service.");
+      toast.error(`Failed to add service: ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        navigate('/profile');
+      }, 1000);
     }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const userId = "66f2c46b560c53a133c31df9";
-    setFormData({
-      ...formData,
-      user_id: userId,
-    });
-    // Use the mutation to send data
-    if (step === 6) {
-      handleServiceAdd();
+    e.preventDefault(); // Prevent form submission via browser
+    if (step === 6 && isSubmitClicked) {
+      await handleServiceAdd(); // Explicit service add
     }
+  };
 
-    // Submit logic without alert
+  const onSubmitClick = () => {
+    setIsSubmitClicked(true); // Set to true when submit button is clicked
   };
 
   return (
@@ -438,7 +454,7 @@ const AddServiceMultiStepForm = () => {
               </button>
             ) : (
               <button
-                type="submit"
+                onClick={onSubmitClick}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-md"
               >
                 Submit

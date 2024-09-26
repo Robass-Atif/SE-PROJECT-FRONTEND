@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const fetchUserServices = async (userId) => {
     const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-user-services/${userId}`);
@@ -38,7 +39,27 @@ const ManageServices = () => {
         mutationFn: deleteUserService,
         onSuccess: () => {
             queryClient.invalidateQueries(['userServices', userId]);
+            toast.success('Service Deleted successfully!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
         },
+        onError: (error) => {
+            toast.error(`Failed to add service: ${error}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+        }
     });
 
     const handleDeleteClick = (serviceId) => {
@@ -66,6 +87,7 @@ const ManageServices = () => {
 
     return (
         <div className="p-6">
+            <ToastContainer />
             {/* Back Link */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-semibold">Manage Your Services</h1>

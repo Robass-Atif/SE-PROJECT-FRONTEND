@@ -131,14 +131,14 @@ function SignIn() {
             <span className="mx-2">or</span>
             <div className="bg-gray-300 w-full h-px"></div>
           </div>
-          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
+          {/* <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300"> */}
             <GoogleLogin
               onSuccess={handleGoogleSignIn}
               onError={(error) => {
                 console.error("Google sign-in failed:", error);
               }}
             />
-          </button>
+          {/* </button> */}
 
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
             <img src={apple} alt="Apple" className="mr-2 w-5 h-5" />
