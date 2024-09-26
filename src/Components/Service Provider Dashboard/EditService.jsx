@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -55,7 +55,6 @@ const EditService = () => {
   }, [service]);
 
   const handleFileUpload = (file) => {
-    console.log(file);
     setIsUploading(true); // Set uploading flag to true
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -78,7 +77,6 @@ const EditService = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          console.log("File available at:", downloadUrl);
           setFormData((prevFormData) => ({
             ...prevFormData,
             coverImage: downloadUrl,

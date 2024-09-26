@@ -8,6 +8,8 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../../../firebase";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddServiceMultiStepForm = () => {
   const navigate = useNavigate();
@@ -38,7 +40,6 @@ const AddServiceMultiStepForm = () => {
   });
 
   const handleFileUpload = (file) => {
-    console.log(file);
     setIsUploading(true); // Set uploading flag to true
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -61,7 +62,6 @@ const AddServiceMultiStepForm = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          console.log("File available at:", downloadUrl);
           setFormData((prevFormData) => ({
             ...prevFormData,
             coverImage: downloadUrl,
@@ -119,12 +119,31 @@ const AddServiceMultiStepForm = () => {
       }
 
       const data = await response.json();
-      alert("Service Added successfully!");
-      //navigate("/dashboard"); // Redirect after success
+      toast.success('Service Added successfully!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      navigate("/dashboard"); // Redirect after success
       return data;
     } catch (error) {
       console.error("Error updating service:", error);
-      alert("Failed to added service.");
+      toast.error(`Failed to add service: ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        navigate('/profile');
+      }, 1000);
     }
   };
 
