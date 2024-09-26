@@ -4,10 +4,10 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../../../firebase'
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Loader from '../loader/index'
 
 const getUser = async (user_id) => {
 
@@ -38,18 +38,19 @@ const EditProfile = () => {
   const languages = ['Urdu', 'English', 'Spanish', 'French', 'German', 'Hindi'];
   const proficiencies = ['Beginner', 'Intermediate', 'Fluent', 'Native'];
   const skills = ['Electrican', 'Plumbing', 'Carpanter', 'Gardner', 'Other'];
-
+  const [updating , setUpdating] = useState(false)
   const user_id = '66f2c46b560c53a133c31df9'
   const navigate = useNavigate()
-  
+
 
   const { data, error, isLoading } = useQuery({
     queryKey: ['user', user_id],
     queryFn: () => getUser(user_id),
   });
+
   useEffect(() => {
     if (data && data.skills) {
-      setSelectedSkills(data.skills); 
+      setSelectedSkills(data.skills);
     }
     if (data && data.language) {
 
@@ -67,11 +68,17 @@ const EditProfile = () => {
 
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
+
+ 
 
   if (error) {
     return <div>Error: {error.message}</div>;
+  }
+
+  if(updating){
+    console.log('yes')
   }
 
 
@@ -89,7 +96,7 @@ const EditProfile = () => {
       })),
     };
 
-
+    setUpdating(true)
     axios.patch(`https://backend-qyb4mybn.b4a.run/profile/edit-profile/${user_id}`, profileData)
       .then(response => {
         toast.success('Profile updated successfully!', {
@@ -116,7 +123,10 @@ const EditProfile = () => {
           draggable: true,
           progress: undefined,
         });
-      });
+      })
+      .finally(()=>{
+        setUpdating(false)
+      })
 
 
 
@@ -136,14 +146,14 @@ const EditProfile = () => {
     uploadTask.on('state_changed', (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       setFileProgress(Math.round(progress));
-      
+
 
     }, (error) => {
       setFileUploadError(true);
       setIsUploading(false);
     }, () => {
       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-        
+
         setFormData((prevFormData) => ({ ...prevFormData, profile_image: downloadUrl }));
         setIsUploading(false);
         setFile(null);
@@ -172,6 +182,13 @@ const EditProfile = () => {
     }
   };
 
+  const handleAddCustomSkill = () => {
+    if (customSkill.trim() && !selectedSkills.includes(customSkill.trim())) {
+      setSelectedSkills([...selectedSkills, customSkill.trim()]);
+    }
+    setCustomSkill(''); // Clear the input after adding
+  };
+
   const handleSkillChange = (e) => {
     const skill = e.target.value;
     if (skill === 'Other') {
@@ -179,15 +196,6 @@ const EditProfile = () => {
     } else if (skill && !selectedSkills.includes(skill)) {
       setSelectedSkills([...selectedSkills, skill]);
       setShowCustomSkillInput(false);
-    }
-  };
-
-  const handleCustomSkillInput = (e) => {
-    if (e.key === 'Enter' && customSkill.trim()) {
-      if (!selectedSkills.includes(customSkill.trim())) {
-        setSelectedSkills([...selectedSkills, customSkill.trim()]);
-      }
-      setCustomSkill('');
     }
   };
 
@@ -213,8 +221,12 @@ const EditProfile = () => {
   return (
     <>
       <ToastContainer />
+      {updating ? (<Loader/>) :
+      (
+
       <div className="flex justify-center items-center min-h-screen">
 
+        
         <div className="p-6 w-full max-w-2xl">
           <h2 className="text-2xl font-bold mb-4 text-center">Profile</h2>
 
@@ -336,23 +348,30 @@ const EditProfile = () => {
                 defaultValue=""
               >
                 <option value="" disabled>Select a skill</option>
-                {skills.map((skill) => (
+                {['Electrician', 'Plumbing', 'Carpenter', 'Gardener', 'Other'].map((skill) => (
                   <option key={skill} value={skill}>{skill}</option>
                 ))}
               </select>
 
               {/* Show input for custom skill when "Other" is selected */}
               {showCustomSkillInput && (
-                <input
-                  type="text"
-                  className="border-gray-300 p-2 rounded-lg mt-2 w-full"
-                  placeholder="Enter custom skill"
-                  value={customSkill}
-                  onChange={(e) => setCustomSkill(e.target.value)}
-                  onKeyDown={handleCustomSkillInput}
-                />
+                <div className="mt-2 flex items-center">
+                  <input
+                    type="text"
+                    className="border-gray-300 p-2 rounded-lg w-full"
+                    placeholder="Enter custom skill"
+                    value={customSkill}
+                    onChange={(e) => setCustomSkill(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="bg-custom-violet text-white ml-2 px-3 py-2 rounded-lg hover:bg-violet-700"
+                    onClick={handleAddCustomSkill}
+                  >
+                    Add
+                  </button>
+                </div>
               )}
-
               <div className="flex flex-wrap gap-2 mt-2">
                 {selectedSkills.map((skill) => (
                   <div key={skill} className="flex items-center bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
@@ -368,17 +387,19 @@ const EditProfile = () => {
                 ))}
               </div>
             </div>
+            
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="bg-custom-violet text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition duration-300"
-            >
-              Save Changes
-            </button>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="bg-custom-violet text-white px-4 py-2 rounded-lg hover:bg-violet-700 transition duration-300"
+              >
+                Save Changes
+              </button>
           </form>
         </div>
       </div>
+      )}
     </>
   );
 };

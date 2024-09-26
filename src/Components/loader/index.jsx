@@ -1,41 +1,30 @@
-// eslint-disable-next-line @atlaskit/ui-styling-standard/use-compiled -- Ignored via go/DSP-18766
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
-import Lozenge from "@atlaskit/lozenge";
+import Spinner from "@atlaskit/spinner";
 import { token } from "@atlaskit/tokens";
-import Spinner from "@atlaskit/spinner"; // Removed 'type' from import
-
-// jonsa size shi lagay use krlo
-const sizes = ["xsmall", "small", "medium", "large", "xlarge", 80]; // Removed type annotation
 
 const containerStyles = css({
   display: "flex",
-  gap: token("space.200", "16px"),
-  flexWrap: "wrap",
+  justifyContent: "center", // Center horizontally
+  alignItems: "center", // Center vertically
+  height: "100vh", // Adjust height as needed
 });
 
 const itemStyles = css({
   display: "flex",
   alignItems: "center",
-  justifyContent: "flex-end",
-  gap: token("space.100", "8px"),
+  justifyContent: "center",
   flexDirection: "column",
+  gap: token("space.100", "8px"),
 });
 
 export default function Loader() {
   return (
     <div css={containerStyles}>
-      {sizes.map((size) => (
-        <div key={size} css={itemStyles}>
-          <Spinner size={size} label="Loading" />
-          {typeof size === "number" ? (
-            <Lozenge appearance="new">custom</Lozenge>
-          ) : (
-            <Lozenge appearance="success">{size}</Lozenge>
-          )}
-        </div>
-      ))}
+      <div css={itemStyles}>
+        <Spinner size={'xlarge'} label="Loading" />
+      </div>
     </div>
   );
 }
