@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const OtpVerification = () => {
+  const location = useLocation();
+  const { _id, email } = location.state; // Destructure the passed data from state
   const [otp, setOtp] = useState(new Array(6).fill(""));
 
   const handleChange = (element, index) => {
@@ -14,9 +18,25 @@ const OtpVerification = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Entered OTP is ${otp.join("")}`);
+    const otpValue = otp.join(""); // Join the OTP array to get the full OTP
+    try {
+      const response = await axios.post('https://backend-qyb4mybn.b4a.run/api/signup/OTP-verification', {
+        userId: _id,
+        otp: otpValue,
+      });
+
+      if (response.data.success) {
+        // Handle successful OTP verification (e.g., navigate to the next page)
+        alert('OTP verified successfully!');
+      } else {
+        alert('OTP verification failed: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      alert('An error occurred while verifying OTP.');
+    }
   };
 
   return (

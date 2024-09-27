@@ -43,14 +43,14 @@ const Signup = () => {
       });
   
       const data = await response.json(); // Parse response once
-  
+      console.log("Data:", data);
       // Check if the signup was successful
       if (!data.success) {
         throw new Error("Signup failed!"); // Throw error if signup was not successful
       } else {
         console.log("Signup successful:", data);
         // Handle successful signup (e.g., redirect or show a success message)
-        navigate("/OTP"); // Redirect user after successful signup
+        navigate("/OTP",{state:{data:data.data}}); 
       }
     } catch (error) {
       console.error("Error:", error); // Log any errors
