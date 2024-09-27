@@ -34,7 +34,7 @@ const Signup = () => {
   
     try {
       // Make the POST request to the server
-      const response = await fetch("https://sebackend-za96l0pv.b4a.run/api/signup", {
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

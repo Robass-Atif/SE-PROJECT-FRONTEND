@@ -47,7 +47,7 @@ function SignIn() {
     const { credential } = credentialResponse;
     console.log("Google sign-in response:", credential);
     try {
-      const response = await fetch("https://sebackend-za96l0pv.b4a.run/auth/google", {
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
