@@ -4,6 +4,7 @@ import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { data } from "autoprefixer";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -26,34 +27,37 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Merge first and last names
+  
+    // Destructure formData to get individual values
     const { firstName, lastName, email, password } = formData;
-    const fullName = `${firstName} ${lastName}`;
-    console.log("Form data:", { fullName, email, password });
+    const fullName = `${firstName} ${lastName}`; // Merging first and last names
+  
     try {
-      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
+      // Make the POST request to the server
+      const response = await fetch("https://sebackend-za96l0pv.b4a.run/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fullName, email, password }), // Sending fullName
+        body: JSON.stringify({ fullName, email, password }), // Send fullName, email, and password
       });
-
-      if (!response.success) {
-        console.log(response);
-        throw new Error("Signup failed!");
+  
+      const data = await response.json(); // Parse response once
+  
+      // Check if the signup was successful
+      if (!data.success) {
+        throw new Error("Signup failed!"); // Throw error if signup was not successful
       } else {
-        const data = await response.json();
         console.log("Signup successful:", data);
         // Handle successful signup (e.g., redirect or show a success message)
-        navigate("/signin");
+        navigate("/OTP"); // Redirect user after successful signup
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error); // Log any errors
       // Handle errors (e.g., show an error message to the user)
     }
   };
+  
 
   return (
     <>

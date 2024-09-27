@@ -18,7 +18,9 @@ import SettingsRoutes from "./Components/Routes/SettingsRoutes";
 import EditProfile from "./Components/Profile/EditProfile";
 import ManageServices from "./Components/Service Provider Dashboard/ManageServices";
 import EditService from "./Components/Service Provider Dashboard/EditService";
+import Loader from "./Components/loader/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import OTP from "./Components/OTP/index";
 
 function App() {
   const queryClient = new QueryClient();
@@ -28,6 +30,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/OTP" element={<OTP />} />
           <Route path="/role-selection" element={<RoleSelection />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<SignIn />} />
