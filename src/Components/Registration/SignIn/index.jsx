@@ -4,6 +4,9 @@ import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { useDispatch } from 'react-redux';
+import { signInStart, signInFailure, signInSuccess } from '../../../Redux/Slicer';
+
 
 function SignIn() {
   const navigate = useNavigate(); 
@@ -11,6 +14,7 @@ function SignIn() {
   const [password, setPassword] = useState(""); 
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,6 +22,7 @@ function SignIn() {
     const route = role === "freelancer" ? "/addservice" : "/services";
 
     try {
+      dispatch(signInStart());
       const response = await fetch("https://backend-qyb4mybn.b4a.run/api/login", {
         method: "POST",
         headers: {
@@ -29,14 +34,17 @@ function SignIn() {
       const data = await response.json(); // Store the response in a variable
 
       if (!response.ok) {
+        dispatch(signInFailure(data.error));
         throw new Error(data.message || 'Login failed'); // Use the message from the server
       }
       else
       {
       console.log("Success:", data);
+      dispatch(signInSuccess(data));
       navigate('/profile', { state: { user: data.data } });
       }
     } catch (error) {
+      dispatch(signInFailure(error));
       setErrorMessage(error.message); // Set error message to display
       console.error("Error:", error);
     }
@@ -47,6 +55,7 @@ function SignIn() {
     const { credential } = credentialResponse;
     console.log("Google sign-in response:", credential);
     try {
+      dispatch(signInStart());
       const response = await fetch("https://backend-qyb4mybn.b4a.run/auth/google", {
         method: "POST",
         headers: {
@@ -57,12 +66,15 @@ function SignIn() {
 
       const data = await response.json();
       if (response.ok) {
+        dispatch(signInSuccess(data));
         console.log("User signed in:", data.user);
         navigate("/profile"); // Redirect to the profile page
       } else {
+        dispatch(signInFailure(data.error));
         console.error("Error signing in:", data.error);
       }
     } catch (error) {
+      dispatch(signInFailure(error));
       console.error("Error during Google sign-in:", error);
     }
   };

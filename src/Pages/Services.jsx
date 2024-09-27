@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServicesCard from '../Components/Services/ServicesCard';
+import { useSelector, useDispatch } from 'react-redux';
+
+
+
 
 const services = [
     {
@@ -53,8 +57,10 @@ const services = [
 ];
 
 const Services = () => {
+    
     const navigate = useNavigate();
 
+    
     const handleCardClick = (service) => {
         navigate(`/service-details/${service.id}`, { state: { service } });
     };
