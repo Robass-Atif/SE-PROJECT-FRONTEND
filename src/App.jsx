@@ -21,6 +21,7 @@ import EditService from "./Components/Service Provider Dashboard/EditService";
 import Loader from "./Components/loader/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OTP from "./Components/OTP/index";
+import PrivateRoutes from "./Pages/PrivateRoutes";
 
 function App() {
   const queryClient = new QueryClient();
@@ -34,20 +35,25 @@ function App() {
           <Route path="/role-selection" element={<RoleSelection />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/rule" element={<TrustSafety />} />
-          <Route path="/message" element={<ChatSection />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/service-details/:id" element={<ServiceDetails />} />
-          <Route path="/addservice" element={<AddService />} />
-          <Route path="/updateservice" element={<UpdateService />} />
-          <Route path="/dashboard" element={<ServiceProviderDashboard />} />
-          <Route path="/review" element={<FreelancerProfile />} />
-          <Route path="/profile/*" element={<ProfileRoutes />} />
-          <Route path="/settings/*" element={<SettingsRoutes />} />
-          <Route path="/editprofile" element={<EditProfile />} />
-          <Route path="/manage-services" element={<ManageServices />} />
-          <Route path="/edit-service" element={<EditService />} />
+          <Route element={<PrivateRoutes />}>
+            
+            <Route path="/rule" element={<TrustSafety />} />
+            <Route path="/message" element={<ChatSection />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/service-details/:id" element={<ServiceDetails />} />
+            <Route path="/addservice" element={<AddService />} />
+            <Route path="/updateservice" element={<UpdateService />} />
+            <Route path="/dashboard" element={<ServiceProviderDashboard />} />
+            <Route path="/review" element={<FreelancerProfile />} />
+            <Route path="/profile/*" element={<ProfileRoutes />} />
+            <Route path="/settings/*" element={<SettingsRoutes />} />
+            <Route path="/editprofile" element={<EditProfile />} />
+            <Route path="/manage-services" element={<ManageServices />} />
+            <Route path="/edit-service" element={<EditService />} />
+            
+          </Route>
         </Routes>
+        
       </Router>
     </QueryClientProvider>
   );
