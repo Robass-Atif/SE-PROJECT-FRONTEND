@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const OtpVerification = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const OtpVerification = () => {
 
       if (response.data.success) {
         // Handle successful OTP verification (e.g., navigate to the next page)
-        alert('OTP verified successfully!');
+        toast.success('OTP verified successfully!');
       } else {
         alert('OTP verification failed: ' + response.data.message);
       }
