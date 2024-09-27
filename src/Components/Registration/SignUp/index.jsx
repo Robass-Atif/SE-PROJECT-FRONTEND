@@ -4,7 +4,7 @@ import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+
 import { data } from "autoprefixer";
 
 const Signup = () => {
@@ -49,11 +49,11 @@ const Signup = () => {
       if (!data.success) {
         throw new Error("Signup failed!"); // Throw error if signup was not successful
       } else {
-        console.log("Signup successful:", data);
-        toast.success('Signup successful!'); // Show a success toast
+        console.log("Signup successful:", data.Data);
+        
 
         // Handle successful signup (e.g., redirect or show a success message)
-        navigate("/OTP",{state:{data:data.data}}); 
+        navigate("/OTP",{state:{data:data.Data}}); 
       }
     } catch (error) {
       console.error("Error:", error); // Log any errors

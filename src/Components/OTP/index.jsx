@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+
 
 const OtpVerification = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const { _id, email } = location.state; // Destructure the passed data from state
+  const { _id, email } = location.state.data; // Destructure the passed data from state
   const [otp, setOtp] = useState(new Array(6).fill(""));
 
   const handleChange = (element, index) => {
@@ -23,16 +25,23 @@ const OtpVerification = () => {
     e.preventDefault();
     const otpValue = otp.join(""); // Join the OTP array to get the full OTP
     try {
-      const response = await axios.post('https://backend-qyb4mybn.b4a.run/api/signup/OTP-verification', {
-        userId: _id,
-        otp: otpValue,
-      });
+        const response = await fetch('http://localhost:8080/api/OTP-verification', {
+            method: 'POST', // Specify the request method
+            headers: {
+              'Content-Type': 'application/json', // Indicate the type of content
+            },
+            body: JSON.stringify({ userId: _id, otp: otpValue }), // Convert the data to JSON format
+          });
+          
 
-      if (response.data.success) {
+      if (response.ok) {
         // Handle successful OTP verification (e.g., navigate to the next page)
-        toast.success('OTP verified successfully!');
+        console.log('OTP verified:', response);
+        navigate('/signin');
+
+       
       } else {
-        alert('OTP verification failed: ' + response.data.message);
+        alert('OTP verification failed: ' + response);
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
