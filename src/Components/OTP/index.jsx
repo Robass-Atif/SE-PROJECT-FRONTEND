@@ -25,7 +25,7 @@ const OtpVerification = () => {
     e.preventDefault();
     const otpValue = otp.join(""); // Join the OTP array to get the full OTP
     try {
-        const response = await fetch('http://localhost:8080/api/OTP-verification', {
+        const response = await fetch('https://backend-qyb4mybn.b4a.run/api/OTP-verification', {
             method: 'POST', // Specify the request method
             headers: {
               'Content-Type': 'application/json', // Indicate the type of content
