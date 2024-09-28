@@ -9,8 +9,13 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ProfileDropdown from "./profileDropDown";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const { currentUser } = useSelector((state) => state.user);
+
+  // Safely access the user role
+  const userRole = currentUser?.data?.type; // Fallback to 'guest' if currentUser is undefined
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
@@ -27,7 +32,7 @@ const Navbar = () => {
       {/* Left Side - Logo and Links */}
       <div className="flex items-center">
         {/* Logo */}
-        <Link to='/'>
+        <Link to="/">
           <img
             src="https://via.placeholder.com/100x30?text=LSP"
             alt="LSP Logo"
@@ -36,47 +41,56 @@ const Navbar = () => {
         </Link>
 
         {/* Links */}
-        <div className="md:flex space-x-6 hidden">
-          <div className="relative">
+        {currentUser && userRole === "buyer" && (
+          <div className="md:flex space-x-6 hidden">
             <Link
-              to="/find-work"
+              to="/services"
               className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
             >
-              Find work
+              Buy Service
             </Link>
-            {/* Dropdown for Find Work */}
-            <div className="group-hover:block absolute hidden bg-white shadow-lg">
-              {/* Dropdown content here */}
-            </div>
-          </div>
 
-          <div className="relative">
             <Link
-              to="/deliver-work"
+              to="/client-dashboard"
               className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
             >
-              Deliver work
+              Dashboard
             </Link>
-            {/* Dropdown for Deliver Work */}
-            <div className="group-hover:block absolute hidden bg-white shadow-lg">
-              {/* Dropdown content here */}
-            </div>
+
+            <Link
+              to="/message"
+              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+            >
+              Messages
+            </Link>
           </div>
+        )}
 
-          <Link
-            to="/manage-finances"
-            className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-          >
-            Manage finances
-          </Link>
+        {/* Links for Service Providers */}
+        {currentUser && userRole === "freelancer" && (
+          <div className="md:flex space-x-6 hidden">
+            <Link
+              to="/dashboard"
+              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+            >
+              Dashboard
+            </Link>
 
-          <Link
-            to="/message"
-            className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-          >
-            Messages
-          </Link>
-        </div>
+            <Link
+              to="/analytics"
+              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+            >
+              Analytics
+            </Link>
+
+            <Link
+              to="/message"
+              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+            >
+              Messages
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Center - Search Bar */}
@@ -86,7 +100,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search"
-            className="bg-gray-100 py-2 pr-3 pl-10 rounded-lg  focus:ring-custom-violet w-full text-gray-700"
+            className="bg-gray-100 py-2 pr-3 pl-10 rounded-lg focus:ring-custom-violet w-full text-gray-700"
           />
         </div>
       </div>
