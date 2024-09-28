@@ -6,6 +6,7 @@ import {
   FaBars,
   FaQuestionCircle,
   FaTh,
+  FaUser,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ProfileDropdown from "./profileDropDown";
@@ -112,7 +113,15 @@ const Navbar = () => {
         <FaBell className="w-5 h-5 text-gray-600 hover:text-indigo-600 cursor-pointer" />
         <FaEnvelope className="w-5 h-5 text-gray-600 hover:text-indigo-600 cursor-pointer" />
 
-        <ProfileDropdown />
+        {currentUser ? (
+          <ProfileDropdown />
+        ) : (
+          <>
+            <Link to="/signup">
+              <FaUser className="w-5 h-5 text-gray-600 hover:text-indigo-600 cursor-pointer" />
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Mobile Menu Button */}
