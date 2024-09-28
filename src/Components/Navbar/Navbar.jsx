@@ -68,7 +68,7 @@ const Navbar = () => {
         )}
 
         {/* Links for Service Providers */}
-        {currentUser && userRole === "freelancer" && (
+        {currentUser && userRole === "service provider" && (
           <div className="md:flex space-x-6 hidden">
             <Link
               to="/dashboard"
