@@ -39,7 +39,7 @@ const RoleSelection = () => {
           <motion.div
             whileHover={{ scale: 1.05, rotate: 2 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => handleRoleSelect("client")}
+            onClick={() => handleRoleSelect("buyer")}
             className={`cursor-pointer p-6 w-full sm:w-60 h-40 bg-gray-100 border-2 rounded-lg transition-all transform hover:shadow-lg ${
               selectedRole === "client"
                 ? "border-indigo-600"
@@ -52,7 +52,7 @@ const RoleSelection = () => {
               </span>
               <input
                 type="radio"
-                checked={selectedRole === "client"}
+                checked={selectedRole === "buyer"}
                 onChange={() => handleRoleSelect("client")}
                 className="form-radio text-indigo-600"
               />
@@ -66,7 +66,7 @@ const RoleSelection = () => {
           <motion.div
             whileHover={{ scale: 1.05, rotate: -2 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => handleRoleSelect("freelancer")}
+            onClick={() => handleRoleSelect("service provider")}
             className={`cursor-pointer p-6 w-full sm:w-60 h-40 bg-gray-100 border-2 rounded-lg transition-all transform hover:shadow-lg ${
               selectedRole === "freelancer"
                 ? "border-indigo-600"
@@ -79,8 +79,8 @@ const RoleSelection = () => {
               </span>
               <input
                 type="radio"
-                checked={selectedRole === "freelancer"}
-                onChange={() => handleRoleSelect("freelancer")}
+                checked={selectedRole === "service provider"}
+                onChange={() => handleRoleSelect("service provider")}
                 className="form-radio text-indigo-600"
               />
             </div>
