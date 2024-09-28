@@ -4,10 +4,13 @@ import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 import { data } from "autoprefixer";
 
 const Signup = () => {
+  const location = useLocation();
+  const { role } = location.state || {}; // Safely destructure 'role'
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "", // Changed from firstName and lastName to fullName
@@ -28,7 +31,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    console.log(role);
     // Destructure formData to get individual values
     const { firstName, lastName, email, password } = formData;
     const fullName = `${firstName} ${lastName}`; // Merging first and last names
@@ -92,10 +95,10 @@ const Signup = () => {
           </h2>
 
           {/* Apple Sign-up Button */}
-          <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
+          {/* <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
             <img src={apple} alt="apple" className="mr-2 w-5 h-5" />
             Continue with Apple
-          </button>
+          </button> */}
 
           {/* Google Sign-up Button */}
           <button className="flex justify-center items-center border-gray-300 bg-white mb-4 px-4 py-2 border rounded-full w-full text-gray-800 text-sm sm:text-base">
@@ -188,7 +191,7 @@ const Signup = () => {
             <img
               src={passwordshow}
               alt="Show Password"
-              className="top-2 right-3 absolute h-6 cursor-pointer"
+              className="top-10 right-3 absolute h-6 cursor-pointer"
               onClick={handlePasswordShow}
             />
           </div>

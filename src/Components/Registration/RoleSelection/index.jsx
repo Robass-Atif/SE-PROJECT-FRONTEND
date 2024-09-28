@@ -21,9 +21,10 @@ const RoleSelection = () => {
 
   const handleCreateAccount = () => {
     if (selectedRole) {
-      navigate("/signup"); // Redirect to the signup route
+      navigate("/signup", { state:  { role: selectedRole }  }); // Pass 'role' in 'state'
     }
   };
+  
 
   return (
     <div className="flex flex-col justify-center items-center bg-gray-50 py-8 min-h-screen">
