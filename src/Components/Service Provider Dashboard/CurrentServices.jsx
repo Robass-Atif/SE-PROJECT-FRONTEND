@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ServiceCard from './ServiceCard';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const fetchUserServices = async (userId) => {
     const response = await fetch(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-user-services/${userId}`);
@@ -12,7 +13,8 @@ const fetchUserServices = async (userId) => {
 };
 
 const Services = () => {
-    const userId = '66f2c46b560c53a133c31dfb'; // Example user ID
+    const { currentUser } = useSelector((state) => state.user);
+    const userId = currentUser.data._id
 
     // Use the query to fetch services
     const { data: services = [], error, isLoading } = useQuery({

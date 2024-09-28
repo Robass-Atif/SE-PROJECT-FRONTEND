@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast, ToastContainer } from "react-toastify";
+import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 
 const fetchUserServices = async (userId) => {
@@ -23,7 +24,8 @@ const deleteUserService = async (serviceId) => {
 };
 
 const ManageServices = () => {
-    const userId = '66f2c46b560c53a133c31dfb'; // Example user ID
+    const { currentUser } = useSelector((state) => state.user);
+    const userId = currentUser.data._id
     const [confirmDelete, setConfirmDelete] = useState({ show: false, serviceId: null });
     const navigate = useNavigate();
     const queryClient = useQueryClient();

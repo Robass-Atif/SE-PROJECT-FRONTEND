@@ -9,11 +9,13 @@ import {
 } from "firebase/storage";
 import { app } from "../../../firebase";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddServiceMultiStepForm = () => {
   const navigate = useNavigate();
-
+  const { currentUser } = useSelector((state) => state.user);
+  const userId = currentUser.data._id
   const fileInputRef = useRef(null);
   const [fileProgress, setFileProgress] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
@@ -100,7 +102,6 @@ const AddServiceMultiStepForm = () => {
     }
   };
   const handleServiceAdd = async () => {
-    const userId = "66f2c46b560c53a133c31dfb";
     const dataToSend = { formData, userId };
     try {
       const response = await fetch(
