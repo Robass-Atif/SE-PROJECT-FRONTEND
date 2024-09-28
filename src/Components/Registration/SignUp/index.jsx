@@ -43,7 +43,7 @@ const Signup = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fullName, email, password }), // Send fullName, email, and password
+        body: JSON.stringify({ fullName, email, password,user_type:role }), // Send fullName, email, and password
       });
   
       const data = await response.json(); // Parse response once
