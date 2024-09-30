@@ -4,20 +4,21 @@ import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
-
-import { data } from "autoprefixer";
+import { useLocation } from "react-router-dom";
+import Loader from "../../loader/index"; // Import the loader component
 
 const Signup = () => {
   const location = useLocation();
   const { role } = location.state || {}; // Safely destructure 'role'
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "", // Changed from firstName and lastName to fullName
     email: "",
     password: "",
   });
 
+  const [loading, setLoading] = useState(false); // State to track loading status
   const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e) => {
@@ -31,50 +32,51 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(role);
-    // Destructure formData to get individual values
+    setLoading(true); // Show loader on form submission
     const { firstName, lastName, email, password } = formData;
     const fullName = `${firstName} ${lastName}`; // Merging first and last names
-  
+
     try {
       // Make the POST request to the server
-      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fullName, email, password,user_type:role }), // Send fullName, email, and password
-      });
-  
-      const data = await response.json(); // Parse response once
+      const response = await fetch(
+        "https://backend-qyb4mybn.b4a.run/api/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fullName, email, password, user_type: role }), // Send fullName, email, password, and role
+        }
+      );
+
+      const data = await response.json(); // Parse response
       console.log("Data:", data);
       // Check if the signup was successful
       if (!data.success) {
-        throw new Error("Signup failed!"); // Throw error if signup was not successful
+        throw new Error("Signup failed!"); // Handle signup error
       } else {
         console.log("Signup successful:", data.Data);
-        
-
-        // Handle successful signup (e.g., redirect or show a success message)
-        navigate("/OTP",{state:{data:data.Data}}); 
+        navigate("/OTP", { state: { data: data.Data } }); // Navigate to OTP page
       }
     } catch (error) {
-      console.error("Error:", error); // Log any errors
-      // Handle errors (e.g., show an error message to the user)
+      console.error("Error:", error); // Handle errors
+    } finally {
+      setLoading(false); // Hide loader after request completes
     }
   };
-  
 
   return (
     <>
-      {/* Header */}
+      {/* Loader Component: Show only if loading */}
+      
+
+      {/* Form and Content */}
       <header className="py-4 text-center">
         <h1 className="font-bold text-3xl text-gray-900">
           Create your account
         </h1>
       </header>
 
-      {/* Background with diagonal stripes */}
       <div className="relative flex justify-center items-center bg-white min-h-screen">
         <div
           className="absolute inset-0"
@@ -85,7 +87,6 @@ const Signup = () => {
           }}
         ></div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit}
           className="border-gray-200 bg-white shadow-md mx-4 sm:mx-auto p-6 sm:p-8 border rounded-lg w-full max-w-md sm:max-w-lg"
@@ -94,19 +95,11 @@ const Signup = () => {
             Sign up to find work you love
           </h2>
 
-          {/* Apple Sign-up Button */}
-          {/* <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-4 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
-            <img src={apple} alt="apple" className="mr-2 w-5 h-5" />
-            Continue with Apple
-          </button> */}
-
-          {/* Google Sign-up Button */}
           <button className="flex justify-center items-center border-gray-300 bg-white mb-4 px-4 py-2 border rounded-full w-full text-gray-800 text-sm sm:text-base">
             <img src={google} alt="Google" className="mr-2 h-6" />
             Continue with Google
           </button>
 
-          {/* Divider */}
           <div className="flex justify-center items-center my-4">
             <div className="flex-1 bg-gray-300 h-px"></div>
             <span className="px-3 text-gray-500 text-sm sm:text-base">or</span>
@@ -196,7 +189,7 @@ const Signup = () => {
             />
           </div>
 
-          {/* Terms of Service Checkbox */}
+          {/* Terms of Service */}
           <div className="flex items-center mb-4">
             <input
               type="checkbox"
@@ -215,9 +208,36 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors"
+            className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full w-full text-sm text-white sm:text-base transition-colors flex justify-center items-center"
+            disabled={loading} // Disable the button while loading
           >
-            Create My Account
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                <span className="ml-2">Creating Account...</span>
+              </>
+            ) : (
+              "Create My Account"
+            )}
           </button>
 
           {/* Login Link */}
