@@ -47,7 +47,7 @@ function SignIn() {
         throw new Error(data.message || "Login failed"); // Use the message from the server
       } else {
         console.log("Success:", data);
-        dispatch(signInSuccess(data));
+        dispatch(signInSuccess(data.data));
         navigate("/profile", { state: { user: data.data } });
       }
     } catch (error) {
@@ -82,8 +82,8 @@ function SignIn() {
 
       const data = await response.json();
       if (response.ok) {
-        dispatch(signInSuccess(data));
-        console.log("User signed in:", data.user);
+        dispatch(signInSuccess(data.user));
+        console.log("User signed in:", data);
         navigate("/profile", { state: { user: data.user } });
       } else {
         
