@@ -84,7 +84,7 @@ function SignIn() {
       if (response.ok) {
         dispatch(signInSuccess(data));
         console.log("User signed in:", data.user);
-        navigate("/profile"); // Redirect to the profile page
+        navigate("/profile", { state: { user: data.user } });
       } else {
         
       }
