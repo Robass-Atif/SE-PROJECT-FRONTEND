@@ -45,7 +45,7 @@ const Signup = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ fullName, email, password, user_type: role }), // Send fullName, email, password, and role
+          body: JSON.stringify({ fullName, email, password }), // Send fullName, email, password, and role
         }
       );
 
