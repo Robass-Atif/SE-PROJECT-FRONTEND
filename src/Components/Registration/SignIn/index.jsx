@@ -24,8 +24,7 @@ function SignIn() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true); // Show loader on form submission
-    const role = localStorage.getItem("role");
-    const route = role === "freelancer" ? "/addservice" : "/services";
+   const role='buyer';
 
     try {
       dispatch(signInStart());
@@ -48,7 +47,7 @@ function SignIn() {
       } else {
         console.log("Success:", data);
         dispatch(signInSuccess(data.data));
-        navigate("/profile", { state: { user: data.data } });
+        navigate("/role-selection", { state: { user: data.data } });
       }
     } catch (error) {
       dispatch(signInFailure(error));
