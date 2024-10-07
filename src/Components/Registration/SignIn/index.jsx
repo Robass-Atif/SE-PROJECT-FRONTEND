@@ -47,7 +47,7 @@ function SignIn() {
       } else {
         console.log("Success:", data);
         dispatch(signInSuccess(data.data));
-        navigate("/role-selection", { state: { user: data.data } });
+        navigate("/profile", { state: { user: data.data } });
       }
     } catch (error) {
       dispatch(signInFailure(error));
