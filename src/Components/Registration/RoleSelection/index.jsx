@@ -1,27 +1,59 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { email } = location.state || {}; // Safely destructure 'role'
 
-  // Initialize state with value from localStorage
-  useEffect(() => {
-    const storedRole = localStorage.getItem("role");
-    if (storedRole) {
-      setSelectedRole(storedRole);
-    }
-  }, []);
+  // // Initialize state with value from localStorage
+  // useEffect(() => {
+  //   const storedRole = localStorage.getItem("role");
+  //   if (storedRole) {
+  //     setSelectedRole(storedRole);
+  //   }
+  // }, []);
 
-  const handleRoleSelect = (role) => {
+  const handleRoleSelect = async (role) => {
     setSelectedRole(role);
-    localStorage.setItem("role", role); // Save selected role to localStorage
+    e.preventDefault();
+    setLoading(true); // Show loader on form submission
+    try {
+      // Make the POST request to the server
+      const response = await fetch(
+        "https://backend-qyb4mybn.b4a.run/api/role-selection",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({  email,role:selectedRole }), // Send fullName, email, password, and role
+        }
+      );
+
+      const data = await response.json(); // Parse response
+      console.log("Data:", data);
+      // Check if the signup was successful
+      if (!data.success) {
+        throw new Error("Signup failed!"); // Handle signup error
+      } else {
+        console.log("Signup successful:", data.Data);
+        navigate("/OTP", { state: { data: data.Data } }); // Navigate to OTP page
+      }
+    } catch (error) {
+      console.error("Error:", error); // Handle errors
+    } finally {
+      setLoading(false); // Hide loader after request completes
+    }
+    
   };
 
   const handleCreateAccount = () => {
     if (selectedRole) {
-      navigate("/signup", { state:  { role: selectedRole }  }); // Pass 'role' in 'state'
+      navigate("/signin"); // Pass 'role' in 'state'
     }
   };
   
@@ -102,11 +134,11 @@ const RoleSelection = () => {
           }`}
           disabled={!selectedRole}
         >
-          Create Account
+          Select Role
         </motion.button>
 
         {/* Log in Link */}
-        <p className="mt-6 text-center text-gray-700">
+        {/* <p className="mt-6 text-center text-gray-700">
           Already have an account?{" "}
           <span
             onClick={() => navigate("/signin")}
@@ -114,7 +146,7 @@ const RoleSelection = () => {
           >
             Log In
           </span>
-        </p>
+        </p> */}
       </div>
     </div>
   );

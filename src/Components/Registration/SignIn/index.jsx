@@ -24,7 +24,7 @@ function SignIn() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true); // Show loader on form submission
-   const role='buyer';
+   
 
     try {
       dispatch(signInStart());
