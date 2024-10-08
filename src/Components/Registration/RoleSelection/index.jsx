@@ -53,7 +53,7 @@ const RoleSelection = () => {
 
   const handleCreateAccount = () => {
     if (selectedRole) {
-      navigate("/signin"); // Pass 'role' in 'state'
+    
     }
   };
   
