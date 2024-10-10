@@ -37,7 +37,7 @@ const OtpVerification = () => {
       if (response.ok) {
         // Handle successful OTP verification (e.g., navigate to the next page)
         console.log('OTP verified:', response);
-        navigate('/signin');
+        navigate('/role-selection',{state: {email}});
 
        
       } else {

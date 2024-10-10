@@ -24,8 +24,7 @@ function SignIn() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true); // Show loader on form submission
-    const role = localStorage.getItem("role");
-    const route = role === "freelancer" ? "/addservice" : "/services";
+   
 
     try {
       dispatch(signInStart());
