@@ -2,67 +2,50 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServicesCard from '../Components/Services/ServicesCard';
 import { useSelector, useDispatch } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import Loader from '../Components/loader';
 
+const getServices = async () => {
+    const response = await axios.get(`https://backend-qyb4mybn.b4a.run/serviceProvider/get-all-services`);
+    return response.data;
+};
 
+const getUser = async (user_id) => {
+    const response = await fetch(`https://backend-qyb4mybn.b4a.run/profile/user/${user_id}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
 
-
-const services = [
-    {
-        id: 1,
-        name: "John Doe",
-        description: "Expert electrical repair services.",
-        price: 150,
-        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
-        profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
-        rating: 4.5,
-        numberOfRatings: 120,
-        title: 'I will create custom ai art using ai tools'
-    },
-    {
-        id: 2,
-        name: "Jane Smith",
-        description: "Reliable plumbing services.",
-        price: 120,
-        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
-        profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
-        rating: 4.2,
-        numberOfRatings: 98,
-        title: 'I will create custom ai art using ai tools'
-
-    },
-    {
-        id: 4,
-        name: "Sarah Lee",
-        description: "Thorough cleaning services.",
-        price: 100,
-        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
-        profileImage: "https://randomuser.me/api/portraits/women/4.jpg",
-        rating: 4.7,
-        numberOfRatings: 85,
-        title: 'I will create custom ai art using ai tools'
-    },
-
-    {
-        id: 8,
-        name: "Emily Clark",
-        description: "Effective pest control services.",
-        price: 90,
-        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqFK8Yjbmd3MRLSCQr8wL9KwEuP7UG-mMpOw&usqp=CAU",
-        profileImage: "https://randomuser.me/api/portraits/women/8.jpg",
-        rating: 4.5,
-        numberOfRatings: 70,
-        title: 'I will create custom ai art using ai tools'
-
-    },
-];
 
 const Services = () => {
-    
+    const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
-    
+    const { data: servicesData, error: servicesError, isLoading: servicesLoading } = useQuery({
+        queryKey: ['services'],
+        queryFn: getServices,
+    });
+
+
+    if (servicesLoading) {
+        return <Loader />;
+    }
+    else {
+        console.log(servicesData)
+
+    }
+
+
+    if (servicesError) {
+        return <div>Error: {userError?.message || servicesError?.message}</div>;
+    }
+
+
     const handleCardClick = (service) => {
-        navigate(`/service-details/${service.id}`, { state: { service } });
+        navigate(`/service-details/${service._id}`, { state: { service } });
     };
 
     return (
@@ -71,20 +54,22 @@ const Services = () => {
                 <div className="container mx-auto px-4 sm:px-8 lg:px-16">
                     <h2 className="text-3xl font-bold mb-6">Services You May Like</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                        {services.map(service => (
-                            <ServicesCard
-                                key={service.id}
-                                name={service.name}
-                                description={service.description}
-                                title={service.title}
-                                price={service.price}
-                                thumbnail={service.thumbnail}
-                                profileImage={service.profileImage}
-                                rating={service.rating}
-                                numberOfRatings={service.numberOfRatings}
-                                onClick={() => handleCardClick(service)} // Pass click handler
-                            />
-                        ))}
+                        {servicesData
+                            .filter(service => service.user_id !== null) // Filter services where user_id is not null
+                            .map((service, index) => (
+                                <ServicesCard
+                                    key={service._id}
+                                    name={service.user_id.name}
+                                    description={service.description}
+                                    title={service.title}
+                                    price={service.price}
+                                    thumbnail={service.service_images}
+                                    profileImage={service.user_id.profile_image}
+                                    rating={'0'}
+                                    numberOfRatings={'0'}
+                                    onClick={() => handleCardClick(service)} // Pass click handler
+                                />
+                            ))}
                     </div>
                 </div>
             </section>

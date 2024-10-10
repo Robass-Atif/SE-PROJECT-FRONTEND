@@ -1,23 +1,63 @@
+import axios from 'axios';
 import React, { useState } from 'react';
-
-const HireModal = ({ onClose }) => {
+import { useSelector } from 'react-redux';
+import Loader from '../loader';
+import { useNavigate } from 'react-router-dom';
+const HireModal = ({ onClose, service }) => {
+    const { currentUser } = useSelector((state) => state.user);
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate()
+    const handleSubmit = async () => {
+        
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle form submission (e.g., send data to a server)
-        console.log({ date, time, price, description });
-        onClose(); // Close the modal after submission
+        setLoading(true);  
+        setError(null); 
+
+        const order = {
+            "service_id": service._id,
+            "buyer_id": currentUser._id,
+            "service_provider_id": service.user_id._id,
+            "date": date,
+            "time": time,
+            "price": price,
+            "description": description
+        };
+        console.log('Data to send' ,order)
+
+        try {
+            const response = await axios.post(`https://backend-qyb4mybn.b4a.run/order/create`, order);
+
+            if (response.status === 201) {
+                
+                console.log('Order created successfully', response.data); 
+                
+            } else {
+                setError('Failed to create order. Please try again.'); 
+            }
+        } catch (err) {
+            setError('An error occurred while creating the order.');
+            console.error(err);
+        } finally {
+            setLoading(false);
+            navigate('/user/dashboard')
+        }
     };
+
+    if(loading){
+        return <Loader/>
+    }
+
 
     return (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-xl font-semibold mb-4">Hire Service</h2>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <div className="mb-4">
                         <label htmlFor="date" className="block text-sm font-medium mb-1">Date</label>
                         <input
@@ -71,7 +111,8 @@ const HireModal = ({ onClose }) => {
                             Cancel
                         </button>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleSubmit}
                             className="bg-custom-violet hover:bg-custom-violet-dark py-2 px-4 rounded-md text-sm font-medium text-white"
                         >
                             Submit
