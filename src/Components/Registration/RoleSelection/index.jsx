@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 
 const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState(null);
@@ -18,6 +20,7 @@ const RoleSelection = () => {
     if (!selectedRole) return;
 
     setLoading(true); // Show loader on form submission
+    console.log(email);
 
     try {
       // Make the POST request to the server
@@ -39,8 +42,9 @@ const RoleSelection = () => {
       if (!data.success) {
         throw new Error("Role selection failed!"); // Handle error
       } else {
-        console.log("Role selection successful:", data.Data);
-        navigate("/OTP", { state: { data: data.Data } }); // Navigate to OTP page
+        console.log("Role selection successful:", data.data);
+        navigate("/signin")
+       
       }
     } catch (error) {
       console.error("Error:", error); // Handle errors
