@@ -6,7 +6,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../loader/index"; // Import the loader component
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
-import { signInStart, signInFailure, signInSuccess } from "../../../Redux/Slicer";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../../../Redux/Slicer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -44,13 +48,16 @@ const Signup = () => {
 
     try {
       // Make the POST request to the server
-      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fullName, email, password }), // Send fullName, email, password, and role
-      });
+      const response = await fetch(
+        "https://backend-qyb4mybn.b4a.run/api/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fullName, email, password }), // Send fullName, email, password, and role
+        }
+      );
 
       const data = await response.json(); // Parse response
       console.log("Data:", data);
@@ -78,13 +85,16 @@ const Signup = () => {
 
     try {
       dispatch(signInStart());
-      const response = await fetch("https://backend-qyb4mybn.b4a.run/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: credential }),
-      });
+      const response = await fetch(
+        "https://backend-qyb4mybn.b4a.run/auth/google",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: credential }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
@@ -95,7 +105,7 @@ const Signup = () => {
           navigate("/profile", { state: { user: data.data } });
         } else {
           navigate("/services", { state: { user: data.data } });
-        } 
+        }
       } else {
         dispatch(signInFailure("Google Sign-In failed."));
         notifyError("Google Sign-In failed."); // Display error notification
@@ -118,7 +128,9 @@ const Signup = () => {
 
         {/* Form and Content */}
         <header className="py-4 text-center">
-          <h1 className="font-bold text-3xl text-gray-900">Create your account</h1>
+          <h1 className="font-bold text-3xl text-gray-900">
+            Create your account
+          </h1>
         </header>
 
         <div className="relative flex justify-center items-center bg-white min-h-screen">
@@ -152,13 +164,18 @@ const Signup = () => {
 
             <div className="flex justify-center items-center my-4">
               <div className="flex-1 bg-gray-300 h-px"></div>
-              <span className="px-3 text-gray-500 text-sm sm:text-base">or</span>
+              <span className="px-3 text-gray-500 text-sm sm:text-base">
+                or
+              </span>
               <div className="flex-1 bg-gray-300 h-px"></div>
             </div>
 
             {/* Name Input */}
             <div className="mb-4">
-              <label htmlFor="fullname" className="block mb-2 text-sm sm:text-base">
+              <label
+                htmlFor="fullname"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 Full Name
               </label>
               <input
@@ -175,7 +192,10 @@ const Signup = () => {
 
             {/* Email Input */}
             <div className="mb-4">
-              <label htmlFor="email" className="block mb-2 text-sm sm:text-base">
+              <label
+                htmlFor="email"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 Email
               </label>
               <input
@@ -192,7 +212,10 @@ const Signup = () => {
 
             {/* Password Input */}
             <div className="relative mb-4">
-              <label htmlFor="password" className="block mb-2 text-sm sm:text-base">
+              <label
+                htmlFor="password"
+                className="block mb-2 text-sm sm:text-base"
+              >
                 Password
               </label>
               <input
@@ -221,7 +244,10 @@ const Signup = () => {
                 className="border-gray-300 rounded focus:ring-indigo-500 w-4 h-4 text-indigo-600"
                 required
               />
-              <label htmlFor="checked" className="block ml-2 text-gray-900 text-sm sm:text-base cursor-pointer">
+              <label
+                htmlFor="checked"
+                className="block ml-2 text-gray-900 text-sm sm:text-base cursor-pointer"
+              >
                 Yes, I agree to the freelance Terms of Service
               </label>
             </div>
@@ -264,12 +290,23 @@ const Signup = () => {
             {/* Login Link */}
             <p className="mt-4 text-center text-sm sm:text-base">
               Already have an account?{" "}
-              <Link to="/signin" className="text-indigo-600 font-semibold hover:underline">
+              <Link
+                to="/signin"
+                className="text-indigo-600 font-semibold hover:underline"
+              >
                 Log in
               </Link>
             </p>
           </form>
         </div>
+        {/* Footer */}
+        <footer className="bg-indigo-600 py-4 mt-10 w-full text-white">
+          <div className="mx-auto text-center container">
+            <p className="text-xs sm:text-sm">
+              © 2024 Your App. All rights reserved.
+            </p>
+          </div>
+        </footer>
       </GoogleOAuthProvider>
     </>
   );
