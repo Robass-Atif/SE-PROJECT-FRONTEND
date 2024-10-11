@@ -8,9 +8,15 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 const ProfileDropdown = () => {
+  const { currentUser } = useSelector((state) => state.user);
+
+  const [Username, setUsername] = useState(currentUser.name);
+  const [UserType, setUserType] = useState(currentUser.user_type);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(true);
   const [theme, setTheme] = useState("dark");
@@ -50,8 +56,13 @@ const ProfileDropdown = () => {
                 className="rounded-full w-10 h-10"
               />
               <div>
-                <h2 className="font-semibold text-gray-800">Ahmad Dev</h2>
-                <p className="text-gray-500 text-sm">Freelancer</p>
+                <h2 className="font-semibold text-gray-800">
+                  {Username ? Username : "John Doe"}
+                </h2>
+                <p className="text-gray-500 text-sm">
+
+                  {UserType? UserType : "Guest"}
+                </p>
               </div>
             </div>
 
