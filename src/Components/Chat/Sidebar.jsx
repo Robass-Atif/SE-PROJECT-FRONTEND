@@ -1,21 +1,9 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchChats } from "../../Api/api";
 
 // Sidebar Component
 const Sidebar = ({ activeChat, setActiveChat, userId }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  // Fetch the chats using useQuery hook
-  const {
-    data: chats = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["userChats", userId],
-    queryFn: () => fetchChats(userId),
-    enabled: !!userId,
-  });
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

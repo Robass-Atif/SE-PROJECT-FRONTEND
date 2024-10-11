@@ -1,25 +1,76 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaUser,
   FaChartLine,
   FaDollarSign,
-  FaMoon,
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { ClipLoader } from "react-spinners"; // Import the spinner
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import dummyimg from "../../assets/dummy.png";
 
 const ProfileDropdown = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const user_id = currentUser?._id;
+
+  const getUser = async (user_id) => {
+    const response = await fetch(
+      `https://backend-qyb4mybn.b4a.run/profile/user/${user_id}`
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  };
+
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useQuery({
+    queryKey: ["user", user_id],
+    queryFn: () => getUser(user_id),
+    enabled: !!user_id, // Only run the query if user_id is available
+    onError: (error) => {
+      toast.error("Failed to load user data. Please try again.");
+    },
+  });
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(true);
   const [theme, setTheme] = useState("dark");
 
+  const dropdownRef = useRef();
+
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    setDropdownOpen((prev) => !prev);
   };
 
+  const closeDropdown = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.addEventListener("click", closeDropdown);
+    } else {
+      document.removeEventListener("click", closeDropdown);
+    }
+
+    return () => {
+      document.removeEventListener("click", closeDropdown);
+    };
+  }, [dropdownOpen]);
+
   const toggleOnlineStatus = () => {
-    setOnlineStatus(!onlineStatus);
+    setOnlineStatus((prev) => !prev);
   };
 
   const handleThemeChange = (e) => {
@@ -28,29 +79,49 @@ const ProfileDropdown = () => {
   };
 
   return (
-    <div className="relative z-30">
+    <div className="relative z-30" ref={dropdownRef}>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
       {/* Profile Icon */}
       <img
-        src="https://via.placeholder.com/40"
+        src={userData?.profile_image || dummyimg}
         alt="Profile"
         className="rounded-full w-10 h-10 cursor-pointer"
         onClick={toggleDropdown}
+        onError={(e) => (e.target.src = dummyimg)} // Set to dummy image if not found
       />
 
+      {/* Loading Spinner */}
+      {userLoading && (
+        <div className="flex justify-center items-center mt-4">
+          <ClipLoader color="#4A90E2" size={30} />
+        </div>
+      )}
+
+      {/* Error Handling */}
+      {userError && (
+        <p className="mt-4 text-center text-red-500">Error loading user data</p>
+      )}
+
       {/* Dropdown Menu */}
-      {dropdownOpen && (
+      {dropdownOpen && !userLoading && !userError && (
         <div className="right-0 z-50 absolute bg-white shadow-lg mt-2 rounded-lg w-64">
           <div className="p-4">
             {/* Profile Details */}
             <div className="flex items-center space-x-3">
               <img
-                src="https://via.placeholder.com/40"
+                src={userData?.profile_image || dummyimg}
                 alt="User"
                 className="rounded-full w-10 h-10"
+                onError={(e) => (e.target.src = dummyimg)} // Fallback if image not found
               />
               <div>
-                <h2 className="font-semibold text-gray-800">Ahmad Dev</h2>
-                <p className="text-gray-500 text-sm">Freelancer</p>
+                <h2 className="font-semibold text-gray-800">
+                  {userData?.name || "User Name"}
+                </h2>
+                <p className="text-gray-500 text-sm">
+                  {userData?.user_type || "User Type"}
+                </p>
               </div>
             </div>
 
@@ -76,10 +147,13 @@ const ProfileDropdown = () => {
 
           {/* Menu Options */}
           <div className="space-y-4 p-4 text-gray-700">
-            <div className="flex items-center space-x-3 hover:text-black cursor-pointer">
+            <Link
+              to="/profile"
+              className="flex items-center space-x-3 hover:text-black cursor-pointer"
+            >
               <FaUser className="w-5 h-5" />
-              <Link to="/profile">Your profile</Link>
-            </div>
+              <p>Your profile</p>
+            </Link>
             <div className="flex items-center space-x-3 hover:text-black cursor-pointer">
               <FaChartLine className="w-5 h-5" />
               <p>Stats and trends</p>
@@ -88,11 +162,13 @@ const ProfileDropdown = () => {
               <FaDollarSign className="w-5 h-5" />
               <p>Membership plan</p>
             </div>
-
-            <div className="flex items-center space-x-3 hover:text-black cursor-pointer">
+            <Link
+              to="/settings"
+              className="flex items-center space-x-3 hover:text-black cursor-pointer"
+            >
               <FaCog className="w-5 h-5" />
-              <Link to={"/settings"}>Account settings</Link>
-            </div>
+              <p>Account settings</p>
+            </Link>
           </div>
 
           <div className="border-gray-200 mt-2 border-t" />

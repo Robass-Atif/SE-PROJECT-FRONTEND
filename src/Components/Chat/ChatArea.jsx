@@ -1,20 +1,8 @@
 import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import ChatMessage from "./ChatMessage";
-import { fetchMessageHistory } from "../../Api/api";
 
 const ChatArea = ({ activeChatId, userId, sendMessage }) => {
   const [message, setMessage] = useState("");
-
-  const {
-    data: messages = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["chatHistory", activeChatId],
-    queryFn: () => fetchMessageHistory(activeChatId),
-    enabled: !!activeChatId,
-  });
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
