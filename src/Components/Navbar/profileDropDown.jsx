@@ -7,10 +7,8 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import dummyimg from "../../assets/dummy.png";
 import { logout } from "../../Redux/Slicer";
 
@@ -48,7 +46,6 @@ const ProfileDropdown = () => {
         toast.error("Failed to load user data. Please try again.");
       }
     };
-
     fetchUserData();
   }, [user_id]);
 
@@ -76,14 +73,17 @@ const ProfileDropdown = () => {
         }
       );
 
-      const data = await response.json();
+      const result = await response.json();
+      console.log("Logout API Response:", result); // Log the API response
 
       if (!response.ok) {
-        toast.error(data.message || "Logout failed. Please try again.");
+        toast.error(result.message || "Logout failed. Please try again.");
       } else {
-        dispatch(logout()); // Clear user data from Redux store
+        dispatch(logout());
+        console.log("Logout successful!"); // Log success
         toast.success("Logged out successfully!");
-        navigate("/"); // Navigate to home page after logout
+
+        navigate("/");
       }
     } catch (error) {
       toast.error(error.message || "An error occurred during logout.");
@@ -93,8 +93,6 @@ const ProfileDropdown = () => {
 
   return (
     <div className="relative z-30" ref={dropdownRef}>
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-
       {/* Profile Icon */}
       <img
         src={userData?.profile_image || dummyimg}
