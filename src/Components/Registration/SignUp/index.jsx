@@ -56,7 +56,8 @@ const Signup = () => {
       console.log("Data:", data);
 
       if (!data.success) {
-        throw new Error("Signup failed!"); // Handle signup error
+        notifyError(data.message); // Display error notification
+        console.error("Signup failed:", data.message);
       } else {
         notifySuccess("Signup successful!"); // Display success notification
         console.log("Signup successful:", data.Data);
