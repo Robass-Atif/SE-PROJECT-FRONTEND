@@ -1,44 +1,9 @@
 import React, { useState } from 'react';
 import PendingOrderCard from './PendingOrderCard';
 
-const PendingOrders = () => {
-    const [pendingOrders, setPendingOrders] = useState([
-        // Initial pending orders array
-        {
-            id: 1,
-            customerName: "John Doe",
-            service: "Electrical Repair",
-            status: "Pending",
-            timeframe: "16/09/2024 10:00 AM - 12:00 PM",
-            clientsPrice: "$100"
-        },
-        {
-            id: 2,
-            customerName: "Jane Smith",
-            service: "Plumbing",
-            status: "Pending",
-            timeframe: "17/09/2024 10:00 AM - 12:00 PM",
-            clientsPrice: "$120"
-        },
+const PendingOrders = ({pendingOrdersArr , onUpdate}) => {
 
-        {
-            id: 3,
-            customerName: "Jane Smith",
-            service: "Plumbing",
-            status: "Pending",
-            timeframe: "17/09/2024 10:00 AM - 12:00 PM",
-            clientsPrice: "$120"
-        },
-
-        {
-            id: 4,
-            customerName: "Jane Smith",
-            service: "Plumbing",
-            status: "Pending",
-            timeframe: "17/09/2024 10:00 AM - 12:00 PM",
-            clientsPrice: "$120"
-        },
-    ]);
+    const [pendingOrders, setPendingOrders] = useState(pendingOrdersArr);
 
     const handleOrderResponse = (orderId, response, scheduleDetails = null) => {
         const updatedOrders = pendingOrders.map(order => {
@@ -65,9 +30,10 @@ const PendingOrders = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
                 {pendingOrders.map(order => (
                     <PendingOrderCard
-                        key={order.id}
+                        key={order._id}
                         order={order}
                         onRespond={handleOrderResponse}
+                        onUpdate = {onUpdate}
                     />
                 ))}
             </div>

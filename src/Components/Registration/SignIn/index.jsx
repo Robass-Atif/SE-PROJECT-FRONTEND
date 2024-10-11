@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import google from "../../../assets/google.svg";
-import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
@@ -10,6 +9,8 @@ import {
   signInFailure,
   signInSuccess,
 } from "../../../Redux/Slicer";
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
 
 function SignIn() {
   const navigate = useNavigate();
@@ -19,12 +20,10 @@ function SignIn() {
   const [errorMessage, setErrorMessage] = useState(""); // State for error messages
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true); // Show loader on form submission
-   
 
     try {
       dispatch(signInStart());
@@ -43,22 +42,30 @@ function SignIn() {
 
       if (!response.ok) {
         dispatch(signInFailure(data.error));
-        throw new Error(data.message || "Login failed"); // Use the message from the server
+       toast.error(data.message); // Error toast
+
       } else {
-        console.log("Success:", data);
+        console.log("Success:", data.data);
         dispatch(signInSuccess(data.data));
-        navigate("/profile", { state: { user: data.data } });
+        toast.success("Login successful!"); // Success toast
+        // navigate("/profile", { state: { user: data.data } });
+        // condtional randoring
+        if (data.data.user_type === "service provider") {
+          navigate("/profile", { state: { user: data.data } });
+        } else {
+          navigate("/services", { state: { user: data.data } });
+        }  
       }
     } catch (error) {
       dispatch(signInFailure(error));
       setErrorMessage(error.message); // Set error message to display
+      toast.error(error.message || "Login failed"); // Error toast
       console.error("Error:", error);
-    }
-    finally
-    {
+    } finally {
       setLoading(false); // Hide loader after request completes
     }
   };
+
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
@@ -82,13 +89,19 @@ function SignIn() {
       const data = await response.json();
       if (response.ok) {
         dispatch(signInSuccess(data.user));
-        console.log("User signed in:", data);
-        navigate("/profile", { state: { user: data.user } });
+        toast.success("Google sign-in successful!"); // Success toast
+        console.log("User signed in:", data.user);
+        if (data.user.user_type === "service provider") {
+          navigate("/profile", { state: { user: data.user } });
+        } else {
+          navigate("/services", { state: { user: data.user } });
+        }  
       } else {
-        
+        toast.error(data.message || "Google sign-in failed"); // Error toast
       }
     } catch (error) {
       dispatch(signInFailure(error));
+      toast.error("Google sign-in failed"); // Error toast
       console.error("Error during Google sign-in:", error);
     }
   };
@@ -96,6 +109,9 @@ function SignIn() {
   return (
     <GoogleOAuthProvider clientId="697063750023-7nha10stlk2j37gijq3p2kvgbmpmpu9r.apps.googleusercontent.com">
       <main className="flex justify-center items-center bg-gray-50 p-4 min-h-screen">
+        {/* Toast Container */}
+        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+
         <form className="bg-white shadow-lg p-6 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-md">
           <h3 className="mb-6 font-semibold text-black text-center text-xl sm:text-2xl">
             Log in to Your Account
@@ -186,16 +202,16 @@ function SignIn() {
             <span className="mx-2">or</span>
             <div className="bg-gray-300 w-full h-px"></div>
           </div>
+
           <button className="flex justify-center items-center border-gray-300 bg-white hover:bg-gray-100 mb-2 py-3 border rounded-full w-full text-gray-800 text-sm sm:text-base transition duration-300">
             <GoogleLogin
               onSuccess={handleGoogleSignIn}
               onError={(error) => {
+                toast.error("Google sign-in failed"); // Error toast
                 console.error("Google sign-in failed:", error);
               }}
             />
           </button>
-
-         
 
           <div className="mt-6 text-center text-gray-500 text-xs sm:text-sm">
             Don’t have an account?

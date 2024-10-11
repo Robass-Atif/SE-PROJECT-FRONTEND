@@ -14,7 +14,7 @@ const fetchUserServices = async (userId) => {
 
 const Services = () => {
     const { currentUser } = useSelector((state) => state.user);
-    const userId = currentUser.data._id
+    const userId = currentUser._id
 
     // Use the query to fetch services
     const { data: services = [], error, isLoading } = useQuery({

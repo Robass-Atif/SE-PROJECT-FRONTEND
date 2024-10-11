@@ -22,6 +22,7 @@ import Loader from "./Components/loader/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OTP from "./Components/OTP/index";
 import PrivateRoutes from "./Pages/PrivateRoutes";
+import BuyerDashboard from "./Components/Buyer Dashboard/BuyerDashboard";
 
 function App() {
   const queryClient = new QueryClient();
@@ -44,6 +45,8 @@ function App() {
             <Route path="/addservice" element={<AddService />} />
             <Route path="/updateservice" element={<UpdateService />} />
             <Route path="/dashboard" element={<ServiceProviderDashboard />} />
+            <Route path="/user/dashboard" element={<BuyerDashboard />} />
+
             <Route path="/review" element={<FreelancerProfile />} />
             <Route path="/profile/*" element={<ProfileRoutes />} />
             <Route path="/settings/*" element={<SettingsRoutes />} />

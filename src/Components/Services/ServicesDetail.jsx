@@ -11,6 +11,7 @@ const ServiceDetails = () => {
 
     const location = useLocation();
     const { service } = location.state || {};
+    console.log(service)
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
     if (!service) return <p>No service data available</p>;
@@ -23,23 +24,25 @@ const ServiceDetails = () => {
                     <h1 className="text-2xl font-bold mb-4">{service.title}</h1>
 
                     <img
-                        src={service.thumbnail}
+                        src={service.service_images}
                         alt={service.title}
                         className="w-full h-64 object-cover rounded-md mb-4"
                     />
 
-                    <p className="text-lg mb-4">{service.description}</p>
+                    
                     <p className="text-xl font-bold mb-4">From Price: Rs {service.price}</p>
+                    <p className="text-xl font-bold mb-4">No of revisions: Rs {service.revision_count}</p>
+
 
                     <div className="flex items-center mb-4">
                         <Link to='/profile'>
                             <img
-                                src={service.profileImage}
+                                src={service.user_id.profile_image}
                                 alt={service.name}
                                 className="w-12 h-12 rounded-full mr-2"
                             />
                         </Link>
-                        <div className="text-lg font-semibold">{service.name}</div>
+                        <div className="text-lg font-semibold">{service.user_id.name}</div>
                     </div>
 
                     <div className="text-sm mb-4 flex items-center">
@@ -72,7 +75,7 @@ const ServiceDetails = () => {
                 <div className="md:w-1/3 md:ml-8 mt-8 md:mt-0">
                     <h2 className="text-xl font-semibold mb-2">About My Services</h2>
                     <p className="text-lg">
-                        Detailed description or additional information about the service provider's offerings can be included here.
+                        {service.description}
                     </p>
                     <h2 className="text-xl font-semibold mt-3 mb-2">Previous Reviews</h2>
                     <div className="space-y-4">
@@ -98,7 +101,7 @@ const ServiceDetails = () => {
             </div>
 
             {/* Modal for Hiring */}
-            {isModalOpen && <HireModal onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <HireModal onClose={() => setIsModalOpen(false)} service={service} />}
         </div>
     );
 };

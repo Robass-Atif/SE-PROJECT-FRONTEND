@@ -41,6 +41,11 @@ const ProfileDropdown = () => {
     },
   });
 
+  const [Username, setUsername] = useState(currentUser?.name || "User Name");
+  const [UserType, setUserType] = useState(
+    currentUser?.user_type || "User Type"
+  );
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(true);
   const [theme, setTheme] = useState("dark");
@@ -68,6 +73,13 @@ const ProfileDropdown = () => {
       document.removeEventListener("click", closeDropdown);
     };
   }, [dropdownOpen]);
+
+  useEffect(() => {
+    if (userData) {
+      setUsername(userData.name || "User Name");
+      setUserType(userData.user_type || "User Type");
+    }
+  }, [userData]);
 
   const toggleOnlineStatus = () => {
     setOnlineStatus((prev) => !prev);
@@ -116,12 +128,8 @@ const ProfileDropdown = () => {
                 onError={(e) => (e.target.src = dummyimg)} // Fallback if image not found
               />
               <div>
-                <h2 className="font-semibold text-gray-800">
-                  {userData?.name || "User Name"}
-                </h2>
-                <p className="text-gray-500 text-sm">
-                  {userData?.user_type || "User Type"}
-                </p>
+                <h2 className="font-semibold text-gray-800">{Username}</h2>
+                <p className="text-gray-500 text-sm">{UserType}</p>
               </div>
             </div>
 
