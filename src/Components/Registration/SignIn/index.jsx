@@ -92,9 +92,9 @@ function SignIn() {
         toast.success("Google sign-in successful!"); // Success toast
         console.log("User signed in:", data);
         if (data.user.user_type === "service provider") {
-          navigate("/profile", { state: { user: data.data } });
+          navigate("/profile", { state: { user: data.user } });
         } else {
-          navigate("/services", { state: { user: data.data } });
+          navigate("/services", { state: { user: data.user } });
         }  
       } else {
         toast.error(data.message || "Google sign-in failed"); // Error toast

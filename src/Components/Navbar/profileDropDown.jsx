@@ -8,8 +8,11 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ProfileDropdown = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [onlineStatus, setOnlineStatus] = useState(true);
   const [theme, setTheme] = useState("dark");
