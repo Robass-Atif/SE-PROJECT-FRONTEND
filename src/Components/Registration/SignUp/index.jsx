@@ -102,7 +102,7 @@ const Signup = () => {
         dispatch(signInSuccess(data.user));
         notifySuccess("Google Sign-In successful!"); // Display success notification
         console.log("User signed in:", data);
-        if (data.user.user_type === "service provider") {
+        if (data.user.type === "service provider") {
           navigate("/profile", { state: { user: data.user } });
         } else {
           navigate("/services", { state: { user: data.user } });

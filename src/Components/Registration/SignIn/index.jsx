@@ -91,7 +91,7 @@ function SignIn() {
         dispatch(signInSuccess(data.user));
         toast.success("Google sign-in successful!"); // Success toast
         console.log("User signed in:", data);
-        if (data.user.user_type === "service provider") {
+        if (data.user.type === "service provider") {
           navigate("/profile", { state: { user: data.user } });
         } else {
           navigate("/services", { state: { user: data.user } });
