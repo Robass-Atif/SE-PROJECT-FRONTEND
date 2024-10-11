@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../loader/index"; // Import the loader component
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
-import {
-  signInStart,
-  signInFailure,
-  signInSuccess,
-} from "../../../Redux/Slicer";
+import { signInStart, signInFailure, signInSuccess } from "../../../Redux/Slicer";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const location = useLocation();
@@ -20,7 +16,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullName: "", // Changed from firstName and lastName to fullName
+    fullName: "",
     email: "",
     password: "",
   });
@@ -38,6 +34,9 @@ const Signup = () => {
     setShowPassword(!showPassword);
   };
 
+  const notifySuccess = (message) => toast.success(message);
+  const notifyError = (message) => toast.error(message);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Show loader on form submission
@@ -45,28 +44,27 @@ const Signup = () => {
 
     try {
       // Make the POST request to the server
-      const response = await fetch(
-        "https://backend-qyb4mybn.b4a.run/api/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ fullName, email, password }), // Send fullName, email, password, and role
-        }
-      );
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fullName, email, password }), // Send fullName, email, password, and role
+      });
 
       const data = await response.json(); // Parse response
       console.log("Data:", data);
-      // Check if the signup was successful
+
       if (!data.success) {
         throw new Error("Signup failed!"); // Handle signup error
       } else {
+        notifySuccess("Signup successful!"); // Display success notification
         console.log("Signup successful:", data.Data);
         navigate("/OTP", { state: { data: data.Data } }); // Navigate to OTP page
       }
     } catch (error) {
-      console.error("Error:", error); // Handle errors
+      notifyError("Signup failed, please try again."); // Display error notification
+      console.error("Error:", error);
     } finally {
       setLoading(false); // Hide loader after request completes
     }
@@ -76,29 +74,30 @@ const Signup = () => {
   const handleGoogleSignIn = async (credentialResponse) => {
     const { credential } = credentialResponse;
     console.log("Google sign-in response:", credential);
+
     try {
       dispatch(signInStart());
-      const response = await fetch(
-        "https://backend-qyb4mybn.b4a.run/auth/google",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token: credential }),
-        }
-      );
+      const response = await fetch("https://backend-qyb4mybn.b4a.run/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: credential }),
+      });
 
       const data = await response.json();
       if (response.ok) {
         dispatch(signInSuccess(data.user));
+        notifySuccess("Google Sign-In successful!"); // Display success notification
         console.log("User signed in:", data);
         navigate("/profile", { state: { user: data.user } });
       } else {
         dispatch(signInFailure("Google Sign-In failed."));
+        notifyError("Google Sign-In failed."); // Display error notification
       }
     } catch (error) {
       dispatch(signInFailure(error));
+      notifyError("Error during Google sign-in."); // Display error notification
       console.error("Error during Google sign-in:", error);
     }
   };
@@ -109,11 +108,12 @@ const Signup = () => {
         {/* Loader Component: Show only if loading */}
         {loading && <Loader />}
 
+        {/* Toast Notifications */}
+        <ToastContainer />
+
         {/* Form and Content */}
         <header className="py-4 text-center">
-          <h1 className="font-bold text-3xl text-gray-900">
-            Create your account
-          </h1>
+          <h1 className="font-bold text-3xl text-gray-900">Create your account</h1>
         </header>
 
         <div className="relative flex justify-center items-center bg-white min-h-screen">
@@ -140,24 +140,20 @@ const Signup = () => {
                 onSuccess={handleGoogleSignIn}
                 onError={(error) => {
                   console.error("Google sign-in failed:", error);
+                  notifyError("Google sign-in failed."); // Display error notification
                 }}
               />
             </button>
 
             <div className="flex justify-center items-center my-4">
               <div className="flex-1 bg-gray-300 h-px"></div>
-              <span className="px-3 text-gray-500 text-sm sm:text-base">
-                or
-              </span>
+              <span className="px-3 text-gray-500 text-sm sm:text-base">or</span>
               <div className="flex-1 bg-gray-300 h-px"></div>
             </div>
 
             {/* Name Input */}
             <div className="mb-4">
-              <label
-                htmlFor="fullname"
-                className="block mb-2 text-sm sm:text-base"
-              >
+              <label htmlFor="fullname" className="block mb-2 text-sm sm:text-base">
                 Full Name
               </label>
               <input
@@ -174,10 +170,7 @@ const Signup = () => {
 
             {/* Email Input */}
             <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm sm:text-base"
-              >
+              <label htmlFor="email" className="block mb-2 text-sm sm:text-base">
                 Email
               </label>
               <input
@@ -194,10 +187,7 @@ const Signup = () => {
 
             {/* Password Input */}
             <div className="relative mb-4">
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm sm:text-base"
-              >
+              <label htmlFor="password" className="block mb-2 text-sm sm:text-base">
                 Password
               </label>
               <input
@@ -226,10 +216,7 @@ const Signup = () => {
                 className="border-gray-300 rounded focus:ring-indigo-500 w-4 h-4 text-indigo-600"
                 required
               />
-              <label
-                htmlFor="checked"
-                className="block ml-2 text-gray-900 text-sm sm:text-base cursor-pointer"
-              >
+              <label htmlFor="checked" className="block ml-2 text-gray-900 text-sm sm:text-base cursor-pointer">
                 Yes, I agree to the freelance Terms of Service
               </label>
             </div>
@@ -259,25 +246,23 @@ const Signup = () => {
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     ></path>
                   </svg>
-                  <span className="ml-2">Signing up...</span>
+                  <span className="ml-2">Creating your account...</span>
                 </>
               ) : (
-                "Create my account"
+                "Create Account"
               )}
             </button>
 
             {/* Login Link */}
-            <div className="mt-4 text-center">
-              <p className="text-sm sm:text-base text-gray-800">
-                Already have an account?{" "}
-                <Link to="/signin" className="text-indigo-600 font-medium">
-                  Log in
-                </Link>
-              </p>
-            </div>
+            <p className="mt-4 text-center text-sm sm:text-base">
+              Already have an account?{" "}
+              <Link to="/signin" className="text-indigo-600 font-semibold hover:underline">
+                Log in
+              </Link>
+            </p>
           </form>
         </div>
       </GoogleOAuthProvider>
