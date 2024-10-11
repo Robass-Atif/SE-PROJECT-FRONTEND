@@ -91,7 +91,11 @@ const Signup = () => {
         dispatch(signInSuccess(data.user));
         notifySuccess("Google Sign-In successful!"); // Display success notification
         console.log("User signed in:", data);
-        navigate("/profile", { state: { user: data.user } });
+        if (data.user.user_type === "service provider") {
+          navigate("/profile", { state: { user: data.data } });
+        } else {
+          navigate("/services", { state: { user: data.data } });
+        } 
       } else {
         dispatch(signInFailure("Google Sign-In failed."));
         notifyError("Google Sign-In failed."); // Display error notification

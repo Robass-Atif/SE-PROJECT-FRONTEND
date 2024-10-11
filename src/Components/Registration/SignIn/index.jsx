@@ -48,12 +48,18 @@ function SignIn() {
         console.log("Success:", data);
         dispatch(signInSuccess(data.data));
         toast.success("Login successful!"); // Success toast
-        navigate("/profile", { state: { user: data.data } });
+        // navigate("/profile", { state: { user: data.data } });
+        // condtional randoring
+        if (data.data.type === "service provider") {
+          navigate("/profile", { state: { user: data.data } });
+        } else {
+          navigate("/services", { state: { user: data.data } });
+        }  
       }
     } catch (error) {
       dispatch(signInFailure(error));
       setErrorMessage(error.message); // Set error message to display
-      // toast.error(error.message || "Login failed"); // Error toast
+      toast.error(error.message || "Login failed"); // Error toast
       console.error("Error:", error);
     } finally {
       setLoading(false); // Hide loader after request completes
@@ -85,7 +91,11 @@ function SignIn() {
         dispatch(signInSuccess(data.user));
         toast.success("Google sign-in successful!"); // Success toast
         console.log("User signed in:", data);
-        navigate("/profile", { state: { user: data.user } });
+        if (data.user.user_type === "service provider") {
+          navigate("/profile", { state: { user: data.data } });
+        } else {
+          navigate("/services", { state: { user: data.data } });
+        }  
       } else {
         toast.error(data.message || "Google sign-in failed"); // Error toast
       }
