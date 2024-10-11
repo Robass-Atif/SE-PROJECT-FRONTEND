@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
+import passwordnotshow from "../../../assets/closeEye.png";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../loader/index"; // Import the loader component
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
@@ -229,8 +230,8 @@ const Signup = () => {
                 required
               />
               <img
-                src={passwordshow}
-                alt="Show Password"
+                src={showPassword ? passwordnotshow : passwordshow} // Toggle icons based on showPassword state
+                alt={showPassword ? "Hide Password" : "Show Password"}
                 className="top-10 right-3 absolute h-6 cursor-pointer"
                 onClick={handlePasswordShow}
               />
