@@ -16,7 +16,7 @@ const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
 
   // Safely access the user role
-  const userRole = currentUser?.data?.type; // "buyer" or "service provider"
+  const userRole = currentUser?.data?.type; // Fallback to 'guest' if currentUser is undefined
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
