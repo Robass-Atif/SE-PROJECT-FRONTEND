@@ -50,7 +50,7 @@ function SignIn() {
         toast.success("Login successful!"); // Success toast
         // navigate("/profile", { state: { user: data.data } });
         // condtional randoring
-        if (data.data.type === "service provider") {
+        if (data.data.user_type === "service provider") {
           navigate("/profile", { state: { user: data.data } });
         } else {
           navigate("/services", { state: { user: data.data } });
