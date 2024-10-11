@@ -45,12 +45,12 @@ function SignIn() {
        toast.error(data.message); // Error toast
 
       } else {
-        console.log("Success:", data);
+        console.log("Success:", data.data);
         dispatch(signInSuccess(data.data));
         toast.success("Login successful!"); // Success toast
         // navigate("/profile", { state: { user: data.data } });
         // condtional randoring
-        if (data.data.type === "service provider") {
+        if (data.data.user_type === "service provider") {
           navigate("/profile", { state: { user: data.data } });
         } else {
           navigate("/services", { state: { user: data.data } });
@@ -90,8 +90,8 @@ function SignIn() {
       if (response.ok) {
         dispatch(signInSuccess(data.user));
         toast.success("Google sign-in successful!"); // Success toast
-        console.log("User signed in:", data);
-        if (data.user.type === "service provider") {
+        console.log("User signed in:", data.user);
+        if (data.user.user_type === "service provider") {
           navigate("/profile", { state: { user: data.user } });
         } else {
           navigate("/services", { state: { user: data.user } });
