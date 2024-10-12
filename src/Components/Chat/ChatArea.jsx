@@ -29,14 +29,13 @@ const ChatArea = ({ activeChatId, userId, sendMessage, activeChatTitle }) => {
       
       
       socket.on("messageReceived", (newMessage) => {
+        console.log(socket)
+        console.log(newMessage)
         queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => [
           ...(oldMessages || []),
           newMessage,
         ]);
       });
-      return () => {
-        socket.off("messageReceived");
-      };
   
     }
   }, [activeChatId, socket]);
