@@ -4,10 +4,10 @@ import ChatMessage from "./ChatMessage";
 import { fetchMessageHistory } from "../../Api/api";
 import socket from "../sockets/socket";
 
-const ChatArea = ({ activeChatId, userId, sendMessage, activeChatTitle }) => {
+const ChatArea = ({ activeChatId, userId, activeChatTitle }) => {
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
-  
+
   const {
     data: messages = [],
     isLoading,
@@ -19,61 +19,70 @@ const ChatArea = ({ activeChatId, userId, sendMessage, activeChatTitle }) => {
   });
 
   useEffect(() => {
-    if (socket && !socket.connected) {
-      console.log("Socket is not connected. Trying to connect...");
+    if (!socket.connected) {
       socket.connect(); // Ensure the socket is connected
     }
+
     if (activeChatId) {
-      // Join the chat room when the chat ID is available
-      socket.emit("joinChat", activeChatId);
-      
-      
-      socket.on("messageReceived", (newMessage) => {
-        console.log(socket)
-        console.log(newMessage)
-        queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => [
-          ...(oldMessages || []),
-          newMessage,
-        ]);
-      });
-  
+      socket.emit('joinChat', activeChatId); // Join the chat room
     }
-  }, [activeChatId, socket]);
+
+    const handleNewMessage = (newMessage) => {
+      queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => {
+        const existingMessageIds = new Set(oldMessages.map(msg => msg._id));
+        
+        // Add only if the message doesn't already exist
+        if (!existingMessageIds.has(newMessage._id)) {
+          const obj = {
+            _id: newMessage._id,
+            message_text: newMessage.message_text,
+            sender: newMessage.sender._id,
+            sent_at: newMessage.sent_at
+          }
+          return [...oldMessages, obj];
+        }
+        return oldMessages; // Return unchanged if the message exists
+      });
+    };
+
+    socket.on("messageReceived", handleNewMessage);
+
+    return () => {
+      socket.off("messageReceived", handleNewMessage); // Clean up listener on unmount
+    };
+  }, [activeChatId, socket, queryClient]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message.trim() !== "") {
-      try {
-        const messageData = {
-          chatId: activeChatId,
-          senderId: userId,
-          text: message,
-        };
-        socket.emit('joinChat', activeChatId)
-        queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => [
-          ...(oldMessages || []),
-          {
-            _id: Date.now(), // Temporary ID for the new message
-            sender: userId,
-            message_text: message,
-            sent_at: new Date().toISOString(),
-          },
-        ]);
-        socket.emit("sendMessage", messageData); // Emit the message via socket
-        
-        setMessage("");
-      } catch (error) {
-        console.error("Failed to send message:", error);
-        alert("Failed to send message. Please try again.");
+      console.log(message)
+      const messageData = {
+        chatId: activeChatId,
+        senderId: userId,
+        text: message,
+      };
+
+      const newMessage = {
+        _id: new Date(),
+        sender: userId,
+        message_text: message,
+        sent_at: new Date().toISOString(),
       }
+      queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => {
+        const existingMessageIds = new Set(oldMessages.map(msg => msg._id));
+        if (!existingMessageIds.has(messageData._id)) {
+          return [...(oldMessages || []), newMessage];
+        }
+        return oldMessages;
+      });
+
+      socket.emit("sendMessage", messageData);
+      setMessage("");
     }
   };
 
   if (isLoading) return <div className="text-center">Loading messages...</div>;
-  if (error)
-    return (
-      <div className="text-center text-red-500">Error fetching messages</div>
-    );
+  if (error) return <div className="text-center text-red-500">Error fetching messages</div>;
 
   return (
     <div className="flex flex-col flex-auto bg-gray-50 shadow-lg p-6 rounded-3xl h-full">
@@ -100,7 +109,7 @@ const ChatArea = ({ activeChatId, userId, sendMessage, activeChatTitle }) => {
               isSent={chatMessage.sender === userId}
               message={chatMessage.message_text}
               senderName={chatMessage.sender}
-              timestamp={new Date(chatMessage.sent_at).toLocaleString()}
+              timestamp={chatMessage.sent_at} // Properly format timestamp
             />
           ))}
         </div>
@@ -128,4 +137,4 @@ const ChatArea = ({ activeChatId, userId, sendMessage, activeChatTitle }) => {
   );
 };
 
-export default ChatArea
+export default ChatArea;

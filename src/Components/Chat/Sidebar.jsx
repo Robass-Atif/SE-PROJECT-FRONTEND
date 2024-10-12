@@ -98,14 +98,12 @@ const ConversationButton = ({ name, chatId, activeChat, setActiveChat, setActive
         {
           setActiveChat(chatId); // Set the active chat
           setActiveChatTitle(name)
-          socket.emit("joinChat", chatId)
         }
         else
         {
           setActiveChat(chatId);
           // You might want to navigate to the chat area here if you're using react-router
           setActiveChatTitle(name)
-          socket.emit("joinChat", activeChat._id);
 
         }
       }}

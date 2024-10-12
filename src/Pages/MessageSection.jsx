@@ -33,14 +33,13 @@ const ChatSection = () => {
 
       initializeChat(chatId);
     }
-    socket.emit("joinChat", chatId);
   }, [location.search]);
 
   useEffect(() => {
     // Initialize chat for the active chat ID when it changes
     if (activeChatId) {
       initializeChat(activeChatId);
-      socket.emit("joinChat", activeChatId);
+      console.log()
     }
   }, [activeChatId]);
 
@@ -50,12 +49,6 @@ const ChatSection = () => {
     newChats[activeChatId] = newChats[activeChatId] || [];
     newChats[activeChatId].push({ isSent: true, message, timestamp });
     setChats(newChats);
-    // You may want to also handle sending this message to your backend here
-    socket.emit("sendMessage", {
-      chatId: activeChatId,
-      senderId: userId,
-      text: message,
-    });
   };
 
   const initializeChat = (chatId) => {
@@ -65,12 +58,6 @@ const ChatSection = () => {
   };
 
   useEffect(() => {
-    // Listen for chat history from server
-    socket.on("chatHistory", (messages) => {
-      const newChats = { ...chats, [activeChatId]: messages };
-      setChats(newChats);
-    });
-
     // Listen for incoming messages
     socket.on("messageReceived", (newMessage) => {
       const updatedChats = { ...chats };
@@ -81,11 +68,6 @@ const ChatSection = () => {
       setChats(updatedChats);
     });
 
-    return () => {
-      // Remove socket listeners on cleanup
-      socket.off("chatHistory");
-      socket.off("messageReceived");
-    };
   }, [chats, activeChatId]);
 
   return (
@@ -101,11 +83,10 @@ const ChatSection = () => {
           activeChatId={activeChatId} // Use the active chat ID here
           activeChatTitle={activeChatTitle}
           userId={userId}
-          sendMessage={sendMessage} // Pass sendMessage function here
         />
       </div>
     </div>
   );
 };
 
-export default ChatSection;
+export default ChatSection
