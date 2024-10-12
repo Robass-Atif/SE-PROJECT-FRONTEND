@@ -9,23 +9,21 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import ProfileDropdown from "./profileDropDown";
+import ProfileDropdown from "./profileDropDown"; // Ensure the import path is correct
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
-
-  // Safely access the user role
-  const userRole = currentUser?.user_type; // Fallback to 'guest' if currentUser is undefined
+  const userRole = currentUser?.user_type || "guest"; // Fallback to 'guest' if currentUser is undefined
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   const toggleProfileDropdown = () => {
-    setProfileDropdownOpen(!profileDropdownOpen);
+    setProfileDropdownOpen((prev) => !prev);
   };
 
   return (
@@ -42,56 +40,52 @@ const Navbar = () => {
         </Link>
 
         {/* Links */}
-        {currentUser && userRole === "buyer" && (
-          <div className="md:flex space-x-6 hidden">
-            <Link
-              to="/services"
-              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-            >
-              Buy Service
-            </Link>
-
-            <Link
-              to="/client-dashboard"
-              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-            >
-              Dashboard
-            </Link>
-
-            <Link
-              to="/message"
-              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-            >
-              Messages
-            </Link>
-          </div>
-        )}
-
-        {/* Links for Service Providers */}
-        {currentUser && userRole === "service provider" && (
-          <div className="md:flex space-x-6 hidden">
-            <Link
-              to="/dashboard"
-              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-            >
-              Dashboard
-            </Link>
-
-            <Link
-              to="/analytics"
-              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-            >
-              Analytics
-            </Link>
-
-            <Link
-              to="/message"
-              className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
-            >
-              Messages
-            </Link>
-          </div>
-        )}
+        <div className={`md:flex space-x-6 hidden`}>
+          {userRole === "buyer" && (
+            <>
+              <Link
+                to="/services"
+                className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+              >
+                Buy Service
+              </Link>
+              <Link
+                to="/client-dashboard"
+                className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/message"
+                className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+              >
+                Messages
+              </Link>
+            </>
+          )}
+          {userRole === "service provider" && (
+            <>
+              <Link
+                to="/dashboard"
+                className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/analytics"
+                className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+              >
+                Analytics
+              </Link>
+              <Link
+                to="/message"
+                className="text-gray-700 text-sm hover:text-indigo-600 transition duration-300"
+              >
+                Messages
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Center - Search Bar */}
@@ -116,11 +110,9 @@ const Navbar = () => {
         {currentUser ? (
           <ProfileDropdown />
         ) : (
-          <>
-            <Link to="/signup">
-              <FaUser className="w-5 h-5 text-gray-600 hover:text-indigo-600 cursor-pointer" />
-            </Link>
-          </>
+          <Link to="/signup">
+            <FaUser className="w-5 h-5 text-gray-600 hover:text-indigo-600 cursor-pointer" />
+          </Link>
         )}
       </div>
 

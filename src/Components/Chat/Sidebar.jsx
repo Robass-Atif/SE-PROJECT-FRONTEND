@@ -7,20 +7,15 @@ import socket from "../sockets/socket";
 const Sidebar = ({ activeChat, setActiveChat, userId, setActiveChatTitle }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Fetch the chats using useQuery hook
-  const {
-    data: chats = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["userChats", userId],
-    queryFn: () => fetchChats(userId),
-    enabled: !!userId,
-  });
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const { data: chats = [], isLoading, error } = useQuery(
+    {
+      queryKey: ["chats"],
+      queryFn: () => fetchChats(userId)
+    });
 
   if (isLoading) return <div>Loading chats...</div>;
   if (error) return <div>Error fetching chats</div>;
