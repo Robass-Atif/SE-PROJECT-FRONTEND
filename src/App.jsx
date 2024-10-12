@@ -39,7 +39,8 @@ function App() {
           <Route element={<PrivateRoutes />}>
             
             <Route path="/rule" element={<TrustSafety />} />
-            <Route path="/message" element={<ChatSection />} />
+            <Route path="/message/" element={<ChatSection />} />
+            <Route path="/message/*" element={<ChatSection />} />
             <Route path="/services" element={<Services />} />
             <Route path="/service-details/:id" element={<ServiceDetails />} />
             <Route path="/addservice" element={<AddService />} />
