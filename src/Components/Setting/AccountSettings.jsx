@@ -1,13 +1,38 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios"; // Import axios for API calls
 
 const AccountSettings = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const userEmail = currentUser.email; // Get the email from the Redux store
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle password change logic
+
+    // Check if new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      alert("New passwords do not match.");
+      return;
+    }
+
+    // API call to change the password
+    try {
+      const response = await axios.post('http://localhost:8080/api/change-password', {
+        email: userEmail, // Use the email from the Redux store
+        currentPassword,
+        newPassword,
+      });
+
+      // Handle success response (e.g., show a success message)
+      console.log(response.data);
+    } catch (error) {
+      // Handle error response (e.g., show an error message)
+      console.error("Error changing password:", error);
+    }
   };
 
   return (
