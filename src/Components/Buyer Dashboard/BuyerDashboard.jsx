@@ -28,7 +28,7 @@ const BuyerDashboard = () => {
     const [loading , setLoading] = useState(false)
 
     const user_id = currentUser._id;
-    const user_type = currentUser.type;
+    const user_type = currentUser.user_type;
 
     const { data: pendingOrders, error: pendingOrdersError, isLoading: pendingOrdersLoading, refetch: refetchPendingOrders } = useQuery({
         queryKey: ['pending_orders', user_id],
