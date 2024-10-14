@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaHandshake, FaEnvelope } from 'react-icons/fa'; // Import icons
 import HireModal from './HireModal'; // Import the modal component
+import socket from '../sockets/socket';
+import { useSelector } from 'react-redux';
+import { current } from '@reduxjs/toolkit';
 
 const ServiceDetails = () => {
+    const navigate = useNavigate()
+    const { currentUser } = useSelector((state) => state.user)
+    const userId = currentUser._id
     const reviews = [
         { clientName: "John Smith", rating: 5, comment: "Great job!", timestamp: "2024-09-01T14:00:00Z" },
         { clientName: "Alice Brown", rating: 4, comment: "Good work but could improve communication.", timestamp: "2024-09-02T10:00:00Z" }
@@ -11,10 +17,31 @@ const ServiceDetails = () => {
 
     const location = useLocation();
     const { service } = location.state || {};
-    console.log(service)
+    const receiveId = service.user_id._id
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
     if (!service) return <p>No service data available</p>;
+
+    const handleContactClick = () => {
+        if (!socket.connected) {
+            console.error("Socket not connected");
+            return;
+        }
+
+        // Trigger the createChat event when the user clicks Contact
+        socket.emit("createChat", { senderId: userId, receiverId: receiveId });
+        // Listen for either the existing or newly created chat
+        socket.on("chatExists", (chat) => {
+            const chatId = chat._id; // Extract chat ID
+            socket.emit("joinRoom", chat._id);
+            navigate(`/message/id?query=${encodeURIComponent(chatId)}`); // Navigate to the messageSection with chat ID
+        });
+        socket.on("chatCreated", (newChat) => {
+            const chatId = newChat._id; // Extract chat ID
+            socket.emit("joinRoom", newChat._id);
+            navigate(`/message/id?query=${encodeURIComponent(chatId)}`);
+        });
+      };
 
     return (
         <div className="container mx-auto px-4 py-10 max-w-4xl">
@@ -59,14 +86,14 @@ const ServiceDetails = () => {
                             <FaHandshake className="mr-2" /> Hire
                         </button>
 
-                        <Link
-                            to={`/message?name=${encodeURIComponent(service.name)}`}
+                        <button
+                            onClick={handleContactClick}
                             className="w-1/2" // Ensure the Link behaves like a block element
                         >
-                            <button className="w-full bg-[#5433FF] hover:bg-indigo-600 py-3 rounded-full flex items-center justify-center font-medium text-sm text-white sm:text-base transition duration-300">
+                            <div className="w-full bg-[#5433FF] hover:bg-indigo-600 py-3 rounded-full flex items-center justify-center font-medium text-sm text-white sm:text-base transition duration-300">
                                 <FaEnvelope className="mr-2" /> Contact
-                            </button>
-                        </Link>
+                            </div>
+                        </button>
                     </div>
 
                 </div>

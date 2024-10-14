@@ -2,8 +2,8 @@ import React from "react";
 
 const HelpSupport = () => {
   return (
-    <div className="flex justify-center items-center bg-gray-100 p-4 min-h-screen">
-      <div className="bg-white shadow-lg p-6 rounded-lg w-full max-w-lg">
+    <div className="flex justify-center items-center p-4 min-h-screen">
+      <div className="bg-white border shadow-lg p-6 rounded-lg w-full max-w-lg">
         <h2 className="mb-6 font-bold text-3xl text-gray-900">
           Help & Support
         </h2>

@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import google from "../../../assets/google.svg";
 import apple from "../../../assets/apple.png";
 import passwordshow from "../../../assets/eye.png";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import passwordnotshow from "../../../assets/closeEye.png";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../../loader/index"; // Import the loader component
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
@@ -13,6 +12,8 @@ import {
   signInFailure,
   signInSuccess,
 } from "../../../Redux/Slicer";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullName: "", // Changed from firstName and lastName to fullName
+    fullName: "",
     email: "",
     password: "",
   });
@@ -37,6 +38,9 @@ const Signup = () => {
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
+
+  const notifySuccess = (message) => toast.success(message);
+  const notifyError = (message) => toast.error(message);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,15 +62,18 @@ const Signup = () => {
 
       const data = await response.json(); // Parse response
       console.log("Data:", data);
-      // Check if the signup was successful
+
       if (!data.success) {
-        throw new Error("Signup failed!"); // Handle signup error
+        notifyError(data.message); // Display error notification
+        console.error("Signup failed:", data.message);
       } else {
+        notifySuccess("Signup successful!"); // Display success notification
         console.log("Signup successful:", data.Data);
         navigate("/OTP", { state: { data: data.Data } }); // Navigate to OTP page
       }
     } catch (error) {
-      console.error("Error:", error); // Handle errors
+      notifyError("Signup failed, please try again."); // Display error notification
+      console.error("Error:", error);
     } finally {
       setLoading(false); // Hide loader after request completes
     }
@@ -76,6 +83,7 @@ const Signup = () => {
   const handleGoogleSignIn = async (credentialResponse) => {
     const { credential } = credentialResponse;
     console.log("Google sign-in response:", credential);
+
     try {
       dispatch(signInStart());
       const response = await fetch(
@@ -92,13 +100,20 @@ const Signup = () => {
       const data = await response.json();
       if (response.ok) {
         dispatch(signInSuccess(data.user));
-        console.log("User signed in:", data);
-        navigate("/profile", { state: { user: data.user } });
+        notifySuccess("Google Sign-In successful!"); // Display success notification
+        console.log("User signed in:", data.user);
+        if (data.user.user_type === "service provider") {
+          navigate("/profile", { state: { user: data.user } });
+        } else {
+          navigate("/services", { state: { user: data.user } });
+        }
       } else {
         dispatch(signInFailure("Google Sign-In failed."));
+        notifyError("Google Sign-In failed."); // Display error notification
       }
     } catch (error) {
       dispatch(signInFailure(error));
+      notifyError("Error during Google sign-in."); // Display error notification
       console.error("Error during Google sign-in:", error);
     }
   };
@@ -108,6 +123,9 @@ const Signup = () => {
       <GoogleOAuthProvider clientId="697063750023-7nha10stlk2j37gijq3p2kvgbmpmpu9r.apps.googleusercontent.com">
         {/* Loader Component: Show only if loading */}
         {loading && <Loader />}
+
+        {/* Toast Notifications */}
+        <ToastContainer />
 
         {/* Form and Content */}
         <header className="py-4 text-center">
@@ -140,6 +158,7 @@ const Signup = () => {
                 onSuccess={handleGoogleSignIn}
                 onError={(error) => {
                   console.error("Google sign-in failed:", error);
+                  notifyError("Google sign-in failed."); // Display error notification
                 }}
               />
             </button>
@@ -211,8 +230,8 @@ const Signup = () => {
                 required
               />
               <img
-                src={passwordshow}
-                alt="Show Password"
+                src={showPassword ? passwordnotshow : passwordshow} // Toggle icons based on showPassword state
+                alt={showPassword ? "Hide Password" : "Show Password"}
                 className="top-10 right-3 absolute h-6 cursor-pointer"
                 onClick={handlePasswordShow}
               />
@@ -259,27 +278,36 @@ const Signup = () => {
                     <path
                       className="opacity-75"
                       fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     ></path>
                   </svg>
-                  <span className="ml-2">Signing up...</span>
+                  <span className="ml-2">Creating your account...</span>
                 </>
               ) : (
-                "Create my account"
+                "Create Account"
               )}
             </button>
 
             {/* Login Link */}
-            <div className="mt-4 text-center">
-              <p className="text-sm sm:text-base text-gray-800">
-                Already have an account?{" "}
-                <Link to="/signin" className="text-indigo-600 font-medium">
-                  Log in
-                </Link>
-              </p>
-            </div>
+            <p className="mt-4 text-center text-sm sm:text-base">
+              Already have an account?{" "}
+              <Link
+                to="/signin"
+                className="text-indigo-600 font-semibold hover:underline"
+              >
+                Log in
+              </Link>
+            </p>
           </form>
         </div>
+        {/* Footer */}
+        <footer className="bg-indigo-600 py-4 mt-10 w-full text-white">
+          <div className="mx-auto text-center container">
+            <p className="text-xs sm:text-sm">
+              © 2024 Your App. All rights reserved.
+            </p>
+          </div>
+        </footer>
       </GoogleOAuthProvider>
     </>
   );

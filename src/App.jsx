@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import LandingPage from "./Pages/LandingPage";
 import RoleSelection from "./Components/Registration/RoleSelection";
@@ -23,40 +28,56 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OTP from "./Components/OTP/index";
 import PrivateRoutes from "./Pages/PrivateRoutes";
 import BuyerDashboard from "./Components/Buyer Dashboard/BuyerDashboard";
+import { useSelector } from "react-redux";
 
 function App() {
   const queryClient = new QueryClient();
+  const { currentUser } = useSelector((state) => state.user); // Fetch current user state
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/OTP" element={<OTP />} />
-          <Route path="/role-selection" element={<RoleSelection />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route
+            path="/OTP"
+            element={currentUser ? <Navigate to="/" /> : <OTP />}
+          />
+          <Route
+            path="/role-selection"
+            element={currentUser ? <Navigate to="/" /> : <RoleSelection />}
+          />
+
+          {/* Redirect to home page if user is logged in */}
+          <Route
+            path="/signup"
+            element={currentUser ? <Navigate to="/" /> : <Signup />}
+          />
+          <Route
+            path="/signin"
+            element={currentUser ? <Navigate to="/" /> : <SignIn />}
+          />
+
+          {/* Protected routes */}
           <Route element={<PrivateRoutes />}>
-            
             <Route path="/rule" element={<TrustSafety />} />
-            <Route path="/message" element={<ChatSection />} />
+            <Route path="/message/" element={<ChatSection />} />
+            <Route path="/message/*" element={<ChatSection />} />
             <Route path="/services" element={<Services />} />
             <Route path="/service-details/:id" element={<ServiceDetails />} />
             <Route path="/addservice" element={<AddService />} />
             <Route path="/updateservice" element={<UpdateService />} />
             <Route path="/dashboard" element={<ServiceProviderDashboard />} />
             <Route path="/user/dashboard" element={<BuyerDashboard />} />
-
             <Route path="/review" element={<FreelancerProfile />} />
             <Route path="/profile/*" element={<ProfileRoutes />} />
             <Route path="/settings/*" element={<SettingsRoutes />} />
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/manage-services" element={<ManageServices />} />
             <Route path="/edit-service" element={<EditService />} />
-            
           </Route>
         </Routes>
-        
       </Router>
     </QueryClientProvider>
   );

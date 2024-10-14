@@ -1,4 +1,3 @@
-// ChatMessage.js
 import React from "react";
 
 const ChatMessage = ({ isSent, message, senderName, timestamp }) => {

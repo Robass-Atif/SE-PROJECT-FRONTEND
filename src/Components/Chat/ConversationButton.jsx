@@ -1,14 +1,19 @@
-import React from "react";
-
+import React, { act } from "react";
+import socket from "../sockets/socket";
 const ConversationButton = ({
   name,
   profileImage,
   activeChat,
   setActiveChat,
 }) => {
+  const handleButtonClick = () => {
+    setActiveChat(name)
+    socket.emit('joinRoom', activeChat._id)
+
+  }
   return (
     <button
-      onClick={() => setActiveChat(name)}
+      onClick={handleButtonClick}
       className={`conversation-button ${activeChat === name ? "active" : ""}`}
     >
       <img
