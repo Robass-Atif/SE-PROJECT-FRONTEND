@@ -62,7 +62,7 @@ const LandingPage = () => {
             </div>
           </div>
           {/* Illustration */}
-          <div className="md:block flex justify-end hidden w-1/2">
+          <div className="md:block flex justify-end w-1/2">
             <img
               src={illustration}
               alt="Freelancer Illustration"
