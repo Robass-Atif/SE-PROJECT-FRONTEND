@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { fetchChats } from "../../Api/api";
+import socket from "../sockets/socket";
 
 // Sidebar Component
-const Sidebar = ({ activeChat, setActiveChat, userId }) => {
+const Sidebar = ({ activeChat, setActiveChat, userId, setActiveChatTitle }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const { data: chats = [], isLoading, error } = useQuery(
+    {
+      queryKey: ["chats"],
+      queryFn: () => fetchChats(userId)
+    });
 
   if (isLoading) return <div>Loading chats...</div>;
   if (error) return <div>Error fetching chats</div>;
@@ -56,8 +64,10 @@ const Sidebar = ({ activeChat, setActiveChat, userId }) => {
                       <ConversationButton
                         key={participant._id}
                         name={participant.name}
+                        chatId={chat._id}
                         activeChat={activeChat}
                         setActiveChat={setActiveChat}
+                        setActiveChatTitle={setActiveChatTitle}
                       />
                     );
                   }
@@ -80,12 +90,22 @@ const Sidebar = ({ activeChat, setActiveChat, userId }) => {
 };
 
 // ConversationButton Component
-const ConversationButton = ({ name, activeChat, setActiveChat }) => {
+const ConversationButton = ({ name, chatId, activeChat, setActiveChat, setActiveChatTitle }) => {
   return (
     <button
       onClick={() => {
-        setActiveChat(name); // Set the active chat
-        // You might want to navigate to the chat area here if you're using react-router
+        if (!activeChat)
+        {
+          setActiveChat(chatId); // Set the active chat
+          setActiveChatTitle(name)
+        }
+        else
+        {
+          setActiveChat(chatId);
+          // You might want to navigate to the chat area here if you're using react-router
+          setActiveChatTitle(name)
+
+        }
       }}
       className={`flex flex-row items-center hover:bg-gray-100 rounded-xl p-2 ${
         activeChat === name ? "bg-gray-200" : ""

@@ -6,7 +6,7 @@ const ActiveOrderCard = ({ order }) => {
     const { currentUser } = useSelector((state) => state.user);
 
     const user_id = currentUser._id;
-    const user_type = currentUser.type;
+    const user_type = currentUser.user_type;
     
 
     return (

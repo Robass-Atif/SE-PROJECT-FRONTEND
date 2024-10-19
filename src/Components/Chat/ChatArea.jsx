@@ -1,27 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ChatMessage from "./ChatMessage";
+import { fetchMessageHistory } from "../../Api/api";
+import socket from "../sockets/socket";
 
-const ChatArea = ({ activeChatId, userId, sendMessage }) => {
+const ChatArea = ({ activeChatId, userId, activeChatTitle }) => {
   const [message, setMessage] = useState("");
+  const queryClient = useQueryClient();
+
+  const {
+    data: messages = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["chatHistory", activeChatId],
+    queryFn: () => fetchMessageHistory(activeChatId),
+    enabled: !!activeChatId,
+  });
+
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect(); // Ensure the socket is connected
+    }
+
+    if (activeChatId) {
+      socket.emit('joinChat', activeChatId); // Join the chat room
+    }
+
+    const handleNewMessage = (newMessage) => {
+      queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => {
+        const existingMessageIds = new Set(oldMessages.map(msg => msg._id));
+        
+        // Add only if the message doesn't already exist
+        if (!existingMessageIds.has(newMessage._id)) {
+          const obj = {
+            _id: newMessage._id,
+            message_text: newMessage.message_text,
+            sender: newMessage.sender._id,
+            sent_at: newMessage.sent_at
+          }
+          return [...oldMessages, obj];
+        }
+        return oldMessages; // Return unchanged if the message exists
+      });
+    };
+
+    socket.on("messageReceived", handleNewMessage);
+
+    return () => {
+      socket.off("messageReceived", handleNewMessage); // Clean up listener on unmount
+    };
+  }, [activeChatId, socket, queryClient]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message.trim() !== "") {
-      try {
-        await sendMessage(activeChatId, message);
-        setMessage("");
-      } catch (error) {
-        console.error("Failed to send message:", error);
-        alert("Failed to send message. Please try again.");
+      console.log(message)
+      const messageData = {
+        chatId: activeChatId,
+        senderId: userId,
+        text: message,
+      };
+
+      const newMessage = {
+        _id: new Date(),
+        sender: userId,
+        message_text: message,
+        sent_at: new Date().toISOString(),
       }
+      queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => {
+        const existingMessageIds = new Set(oldMessages.map(msg => msg._id));
+        if (!existingMessageIds.has(messageData._id)) {
+          return [...(oldMessages || []), newMessage];
+        }
+        return oldMessages;
+      });
+
+      socket.emit("sendMessage", messageData);
+      setMessage("");
     }
   };
 
   if (isLoading) return <div className="text-center">Loading messages...</div>;
-  if (error)
-    return (
-      <div className="text-center text-red-500">Error fetching messages</div>
-    );
+  if (error) return <div className="text-center text-red-500">Error fetching messages</div>;
 
   return (
     <div className="flex flex-col flex-auto bg-gray-50 shadow-lg p-6 rounded-3xl h-full">
@@ -34,7 +95,7 @@ const ChatArea = ({ activeChatId, userId, sendMessage }) => {
             className="mr-2 rounded-full w-10 h-10"
           />
           <div>
-            <h2 className="font-bold text-2xl text-white">{activeChatId}</h2>
+            <h2 className="font-bold text-2xl text-white">{activeChatTitle}</h2>
             <span className="text-gray-200 text-sm">Online</span>
           </div>
         </div>
@@ -48,7 +109,7 @@ const ChatArea = ({ activeChatId, userId, sendMessage }) => {
               isSent={chatMessage.sender === userId}
               message={chatMessage.message_text}
               senderName={chatMessage.sender}
-              timestamp={new Date(chatMessage.sent_at).toLocaleString()}
+              timestamp={chatMessage.sent_at} // Properly format timestamp
             />
           ))}
         </div>
