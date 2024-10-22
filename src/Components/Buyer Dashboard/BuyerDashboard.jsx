@@ -30,13 +30,9 @@ const BuyerDashboard = () => {
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
 
-<<<<<<< HEAD
-  const user_id = currentUser._id;
-  const user_type = currentUser.user_type;
-=======
     const user_id = currentUser._id;
     const user_type = currentUser.user_type;
->>>>>>> 66f437c47ec6fbb274d04099455196aec6864905
+
 
   const {
     data: pendingOrders,

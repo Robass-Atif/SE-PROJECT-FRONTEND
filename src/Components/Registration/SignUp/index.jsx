@@ -66,10 +66,11 @@ const Signup = () => {
       if (!data.success) {
         notifyError(data.message); // Display error notification
         console.error("Signup failed:", data.message);
+        // notifyError("Signup failed, please try again."); // Display error notification
       } else {
         notifySuccess("Signup successful!"); // Display success notification
-        console.log("Signup successful:", data.Data);
-        navigate("/OTP", { state: { data: data.Data } }); // Navigate to OTP page
+        console.log("Signup successful:", data.data);
+        navigate("/OTP", { state: { data: data.data } }); // Navigate to OTP page
       }
     } catch (error) {
       notifyError("Signup failed, please try again."); // Display error notification
