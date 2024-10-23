@@ -28,6 +28,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OTP from "./Components/OTP/index";
 import PrivateRoutes from "./Pages/PrivateRoutes";
 import BuyerDashboard from "./Components/Buyer Dashboard/BuyerDashboard";
+import JazzcashPayment from "./Components/JazzcashPayment/Jazzcash";
 import { useSelector } from "react-redux";
 
 function App() {
@@ -76,6 +77,7 @@ function App() {
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/manage-services" element={<ManageServices />} />
             <Route path="/edit-service" element={<EditService />} />
+            <Route path="/payment" element={<JazzcashPayment />} />
           </Route>
         </Routes>
       </Router>
