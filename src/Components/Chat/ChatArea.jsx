@@ -24,21 +24,21 @@ const ChatArea = ({ activeChatId, userId, activeChatTitle }) => {
     }
 
     if (activeChatId) {
-      socket.emit('joinChat', activeChatId); // Join the chat room
+      socket.emit("joinChat", activeChatId); // Join the chat room
     }
 
     const handleNewMessage = (newMessage) => {
       queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => {
-        const existingMessageIds = new Set(oldMessages.map(msg => msg._id));
-        
+        const existingMessageIds = new Set(oldMessages.map((msg) => msg._id));
+
         // Add only if the message doesn't already exist
         if (!existingMessageIds.has(newMessage._id)) {
           const obj = {
             _id: newMessage._id,
             message_text: newMessage.message_text,
             sender: newMessage.sender._id,
-            sent_at: newMessage.sent_at
-          }
+            sent_at: newMessage.sent_at,
+          };
           return [...oldMessages, obj];
         }
         return oldMessages; // Return unchanged if the message exists
@@ -50,37 +50,26 @@ const ChatArea = ({ activeChatId, userId, activeChatTitle }) => {
     return () => {
       socket.off("messageReceived", handleNewMessage); // Clean up listener on unmount
     };
-  }, [activeChatId, socket, queryClient]);
+  }, [activeChatId, queryClient]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message.trim() !== "") {
-      console.log(message)
       const messageData = {
         chatId: activeChatId,
         senderId: userId,
         text: message,
       };
 
-      const newMessage = {
-        _id: new Date(),
-        sender: userId,
-        message_text: message,
-        sent_at: new Date().toISOString(),
-      }
-      queryClient.setQueryData(["chatHistory", activeChatId], (oldMessages) => {
-        const existingMessageIds = new Set(oldMessages.map(msg => msg._id));
-        if (!existingMessageIds.has(messageData._id)) {
-          return [...(oldMessages || []), newMessage];
-        }
-        return oldMessages;
-      });
-
+      // Send the message to the server via socket
       socket.emit("sendMessage", messageData);
+
+      // Clear the input after sending
       setMessage("");
     }
   };
 
+  console.log(activeChatTitle)
   if (isLoading) return <div className="text-center">Loading messages...</div>;
   if (error) return <div className="text-center text-red-500">Error fetching messages</div>;
 
@@ -108,7 +97,7 @@ const ChatArea = ({ activeChatId, userId, activeChatTitle }) => {
               key={chatMessage._id}
               isSent={chatMessage.sender === userId}
               message={chatMessage.message_text}
-              senderName={chatMessage.sender}
+              senderName={activeChatTitle}
               timestamp={chatMessage.sent_at} // Properly format timestamp
             />
           ))}

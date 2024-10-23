@@ -95,7 +95,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search"
-            className="bg-gray-100 py-2 pr-3 pl-10 rounded-lg focus:ring-custom-violet w-full text-gray-700"
+            className="bg-gray-100 py-2 pr-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-violet w-full text-gray-700"
           />
         </div>
       </div>

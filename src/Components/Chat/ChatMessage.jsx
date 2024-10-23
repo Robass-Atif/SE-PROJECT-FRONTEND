@@ -4,6 +4,7 @@ const ChatMessage = ({ isSent, message, senderName, timestamp }) => {
   const getInitials = (name) => {
     const nameArray = name.split(" ");
     const initials = nameArray.map((word) => word[0]).join("");
+    
     return initials.toUpperCase();
   };
 
