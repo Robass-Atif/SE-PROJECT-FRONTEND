@@ -4,7 +4,7 @@ import ProfileSettings from "../Setting/ProfileSettings";
 import AccountSettings from "../Setting/AccountSettings";
 import Notifications from "../Setting/Notifications";
 import PrivacySettings from "../Setting/PrivacySettings";
-import Payments from "../Setting/Payments";
+import Jazzcash from "../JazzcashPayment/Jazzcash";
 import Security from "../Setting/Security";
 import Subscription from "../Setting/Subscription";
 import HelpSupport from "../Setting/HelpSupport";
@@ -21,7 +21,7 @@ const SettingsRoutes = () => {
             <Route path="account" element={<AccountSettings />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="privacy" element={<PrivacySettings />} />
-            <Route path="payments" element={<Payments />} />
+            <Route path="payments" element={<Jazzcash />} />
             <Route path="security" element={<Security />} />
             <Route path="subscription" element={<Subscription />} />
             <Route path="help" element={<HelpSupport />} />

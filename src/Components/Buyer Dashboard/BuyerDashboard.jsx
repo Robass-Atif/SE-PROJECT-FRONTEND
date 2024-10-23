@@ -30,9 +30,14 @@ const BuyerDashboard = () => {
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
 
+<<<<<<< Updated upstream
     const user_id = currentUser._id;
     const user_type = currentUser.user_type;
 
+=======
+  const user_id = currentUser._id;
+  const user_type = currentUser.user_type;
+>>>>>>> Stashed changes
 
   const {
     data: pendingOrders,

@@ -23,13 +23,13 @@ import SettingsRoutes from "./Components/Routes/SettingsRoutes";
 import EditProfile from "./Components/Profile/EditProfile";
 import ManageServices from "./Components/Service Provider Dashboard/ManageServices";
 import EditService from "./Components/Service Provider Dashboard/EditService";
-import Loader from "./Components/loader/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import OTP from "./Components/OTP/index";
 import PrivateRoutes from "./Pages/PrivateRoutes";
 import BuyerDashboard from "./Components/Buyer Dashboard/BuyerDashboard";
-import JazzcashPayment from "./Components/JazzcashPayment/Jazzcash";
 import { useSelector } from "react-redux";
+import Jazzcash from "./Components/JazzcashPayment/Jazzcash";
+import SuccessPage from "./Components/JazzcashPayment/SuccessPage";
 
 function App() {
   const queryClient = new QueryClient();
@@ -77,7 +77,8 @@ function App() {
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/manage-services" element={<ManageServices />} />
             <Route path="/edit-service" element={<EditService />} />
-            <Route path="/payment" element={<JazzcashPayment />} />
+            <Route path="/payment" element={<Jazzcash />} />
+            <Route path="/success" element={<SuccessPage />} />
           </Route>
         </Routes>
       </Router>

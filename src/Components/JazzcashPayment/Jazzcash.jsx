@@ -1,79 +1,74 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const Payment = () => {
-  const [amount, setAmount] = useState(0);
-  const [orderId, setOrderId] = useState("");
-  const [description, setDescription] = useState("Freelance Service Payment");
+const PaymentForm = () => {
+  const [postData, setPostData] = useState(null);
+  const [error, setError] = useState(null);
 
-  const queryClient = useQueryClient();
+  const handleCheckout = async (event) => {
+    event.preventDefault();
+    setError(null);
+    const productId = "123"; // Replace with the actual product ID you want to checkout
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8080/jazzcash/checkout/${productId}`
+      );
 
-  const initiatePayment = async (paymentData) => {
-    const response = await axios.post(
-      "https://backend-qyb4mybn.b4a.run/jazzcash/initiate-payment",
-      paymentData
-    );
-    return response.data;
+      console.log("Response Data:", response.data);
+
+      // Set the postData for rendering the payment form
+      setPostData(response.data);
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      setError("Failed to initiate payment. Please try again.");
+    }
   };
 
-  const mutation = useMutation(initiatePayment, {
-    onSuccess: (data) => {
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl;
-      }
-    },
-    onError: (error) => {
-      console.error("Error initiating payment:", error);
-    },
-  });
-
-  const handlePayment = (e) => {
-    e.preventDefault();
-    mutation.mutate({
-      orderId,
-      amount,
-      description,
-    });
+  const submitForm = (event) => {
+    event.preventDefault();
+    const form = document.getElementById("jazzcashForm");
+    if (form) {
+      form.submit(); // Submit form to the JazzCash payment portal
+    }
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-100 min-h-screen">
-      <form
-        onSubmit={handlePayment}
-        className="bg-white shadow-lg p-8 rounded-lg w-full max-w-md"
-      >
-        <h2 className="mb-6 font-bold text-2xl text-center text-gray-800">
-          Payment Form
-        </h2>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Amount"
-          required
-          className="block border-gray-300 mb-4 p-3 border rounded focus:ring-2 focus:ring-blue-500 w-full focus:outline-none"
-        />
-        <input
-          type="text"
-          value={orderId}
-          onChange={(e) => setOrderId(e.target.value)}
-          placeholder="Order ID"
-          required
-          className="block border-gray-300 mb-4 p-3 border rounded focus:ring-2 focus:ring-blue-500 w-full focus:outline-none"
-        />
+    <div className="flex flex-col justify-center items-center border-gray-300 shadow-lg p-6 border rounded-lg">
+      <h1 className="mb-4 font-bold text-2xl">JazzCash Payment</h1>
+      {error && <div className="mb-2 text-red-500">{error}</div>}
+      {postData ? (
+        <>
+          <h2 className="font-semibold text-xl">ORDER</h2>
+          <h3 className="font-medium text-lg">
+            {postData.pp_Amount / 100} PKR
+          </h3>
+          <form
+            id="jazzcashForm"
+            method="post"
+            action="https://sandbox.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform/"
+          >
+            {Object.entries(postData).map(([key, value]) => (
+              <input key={key} type="hidden" name={key} value={value} />
+            ))}
+            <button
+              type="button"
+              onClick={submitForm}
+              className="bg-red-600 hover:bg-red-500 mt-4 px-4 py-2 rounded text-white"
+            >
+              Pay with JazzCash
+            </button>
+          </form>
+        </>
+      ) : (
         <button
-          type="submit"
-          disabled={mutation.isLoading}
-          className={`w-full p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ${
-            mutation.isLoading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          onClick={handleCheckout}
+          className="bg-red-600 hover:bg-red-500 mt-4 px-4 py-2 rounded text-white"
         >
-          {mutation.isLoading ? "Processing..." : "Pay Now"}
+          Initiate Payment
         </button>
-      </form>
+      )}
     </div>
   );
 };
 
-export default Payment;
+export default PaymentForm;
